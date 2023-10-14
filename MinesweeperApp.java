@@ -8,7 +8,7 @@ public class MinesweeperApp {
     }
 
     public static void main(String[] args) {
-        MinesweeperGrid grid = new MinesweeperGrid();
+        var grid = new MinesweeperGrid();
         grid.print();
     }
 }
