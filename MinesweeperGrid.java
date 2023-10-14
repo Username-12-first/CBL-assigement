@@ -3,6 +3,9 @@
  */
 public class MinesweeperGrid{
 
+    /**
+     * Default grid for Minesweeper.
+     */
     private static int[][] defaultGrid = new int[][] {   
         {1, 100, 1, 0, 0, 1, 100, 1, 0},
         {2, 2, 2, 1, 1, 1, 1, 1, 0},
