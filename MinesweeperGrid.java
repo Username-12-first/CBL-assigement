@@ -1,7 +1,13 @@
 /**
- * The grid for Minesweeper.
- */
-public class MinesweeperGrid{
+* The grid for Minesweeper.
+* Requrements:
+*   - define how many rows and columns the grid has
+*   - define how many mines the grid has
+*   - define the integer number 100 as a mine
+*   - define the intiger number 0 as a empty field
+*   - define other intigers for to how many mines a field is conected
+*/
+public class MinesweeperGrid {
 
     /**
      * Default grid for Minesweeper.
@@ -25,6 +31,9 @@ public class MinesweeperGrid{
 
     private int size = 9;
 
+    /**
+     * method to print the grid.
+     */
     public void print() {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
