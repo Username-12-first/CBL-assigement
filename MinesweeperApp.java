@@ -1,3 +1,8 @@
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 /**
  * Print the grid of Minesweeper.
  */
@@ -25,6 +30,7 @@ public class MinesweeperApp {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-
+        var guiDisplay = new GuiGridDisplay(grid);
+        guiDisplay.display();
     }
 }

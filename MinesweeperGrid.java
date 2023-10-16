@@ -1,3 +1,5 @@
+import java.awt.Point;
+
 /**
 * The grid for Minesweeper.
 * Requrements:
@@ -30,6 +32,20 @@ public class MinesweeperGrid {
     }
 
     private int size = 9;
+
+    public int getElement(int row, int column) {
+        if ((row < 0) || (row > grid.length)) {
+            return -1;
+        }
+        if ((column < 0) || (column > grid[0].length)) {
+            return -1;
+        }
+        return grid[row][column];
+    }
+
+    public Point getSize() {
+        return new Point(grid.length, grid[0].length);
+    }
 
     /**
      * method to print the grid.
