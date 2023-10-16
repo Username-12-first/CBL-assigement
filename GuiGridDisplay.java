@@ -54,7 +54,8 @@ public class GuiGridDisplay implements ActionListener {
                 mainPanel.add(buttonMine);
             }
         }
-   }
+        mainPanel.updateUI();
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
