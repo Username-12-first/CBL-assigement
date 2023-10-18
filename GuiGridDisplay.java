@@ -8,13 +8,16 @@ import javax.swing.*;
 */
 public class GuiGridDisplay implements ActionListener {
     private MinesweeperGrid minesweeperGrid;
+    private MineButton[][] buttons;
     
     public GuiGridDisplay(MinesweeperGrid minesweeperGrid) {
         this.minesweeperGrid = minesweeperGrid;
+        Point gridSize = minesweeperGrid.getSize();
+        buttons = new MineButton[(int) gridSize.getX()][ (int) gridSize.getY()];
     }
 
     /**
-     * method to print the grid.
+     * method to display the grid.
      */
     public void display() {
         JFrame frame = new JFrame();
@@ -48,20 +51,63 @@ public class GuiGridDisplay implements ActionListener {
                     buttonValueToShow = "*";
                 } 
                 
-                JButton buttonMine = new MineButton(buttonValueToShow);
+                Boolean buttonIsBlanck = (0 == retrieved);
+                var buttonMine = new MineButton(buttonValueToShow, buttonIsBlanck, i, j);
                 buttonMine.addActionListener(this);
                 buttonMine.setBackground(Color.pink);
                 mainPanel.add(buttonMine);
+                buttons[i][j] = buttonMine;
             }
         }
+
         mainPanel.updateUI();
-    }
+   }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof MineButton) {
             var clickedButton = (MineButton) e.getSource();
-            clickedButton.showValue();
+            if (clickedButton.IsBlanckAndActive()) {
+                clickedButton.showValue();
+                FlipNeighboursIfBlanck(clickedButton.GetRow(), clickedButton.GetColumn());
+            } else {
+                clickedButton.showValue();
+            }
         }
-   }
+    }
+
+    private void FlipNeighboursIfBlanck(int row, int column) {
+        // left
+        if (column > 0) {
+            var leftNeighbour = buttons[row][column - 1];
+            if (leftNeighbour.IsBlanckAndActive()) {
+                leftNeighbour.showValue();
+                FlipNeighboursIfBlanck(leftNeighbour.GetRow(), leftNeighbour.GetColumn());
+            }
+        }
+        // right
+        if (column < (buttons[0].length - 1)) {
+            var rightNeighbour = buttons[row][column + 1];
+            if (rightNeighbour.IsBlanckAndActive()) {
+                rightNeighbour.showValue();
+                FlipNeighboursIfBlanck(rightNeighbour.GetRow(), rightNeighbour.GetColumn());
+            }
+        }
+        // top
+        if (row > 0) {
+            var topNeighbour = buttons[row - 1][column];
+            if (topNeighbour.IsBlanckAndActive()) {
+                topNeighbour.showValue();
+                FlipNeighboursIfBlanck(topNeighbour.GetRow(), topNeighbour.GetColumn());
+            }
+        }
+        // bottom
+        if (row < (buttons.length - 1)) {
+            var bottomNeighbour = buttons[row + 1][column];
+            if (bottomNeighbour.IsBlanckAndActive()) {
+                bottomNeighbour.showValue();
+                FlipNeighboursIfBlanck(bottomNeighbour.GetRow(), bottomNeighbour.GetColumn());
+            }
+        }
+    }
 }
