@@ -1,7 +1,7 @@
 import javax.swing.JButton;
 
 /**
-* Button to be used in the Miner game UI
+* Button to be used in the Miner game UI.
 */
 public class MineButton extends JButton {
     private String valueToShow;
@@ -20,20 +20,20 @@ public class MineButton extends JButton {
         this.column = column;
     }
 
-    public int GetRow() {
+    public int getRow() {
         return row;
     }
 
-    public int GetColumn() {
+    public int getColumn() {
         return column;
     }
 
-    public Boolean IsBlanckAndActive() {
+    public Boolean isBlanckAndActive() {
         return blanck && isEnabled();
     }
 
     /**
-     * Show hidden values
+     * Show hidden values.
      */
     public void showValue() {
         setText(valueToShow);

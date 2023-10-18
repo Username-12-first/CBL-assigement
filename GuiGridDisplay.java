@@ -10,6 +10,9 @@ public class GuiGridDisplay implements ActionListener {
     private MinesweeperGrid minesweeperGrid;
     private MineButton[][] buttons;
     
+    /**
+     * Filling the buttons with the value of the grid.
+     */
     public GuiGridDisplay(MinesweeperGrid minesweeperGrid) {
         this.minesweeperGrid = minesweeperGrid;
         Point gridSize = minesweeperGrid.getSize();
@@ -20,6 +23,7 @@ public class GuiGridDisplay implements ActionListener {
      * method to display the grid.
      */
     public void display() {
+        //Setting the frame.
         JFrame frame = new JFrame();
         frame.setLayout(null);
         frame.setTitle("Minsweeper");
@@ -27,6 +31,7 @@ public class GuiGridDisplay implements ActionListener {
         frame.setSize(1000, 1000);
         frame.setVisible(true);
 
+        //Setting the controlPanel.
         JPanel controlPanel = new JPanel();
         controlPanel.setBackground(Color.white);
         controlPanel.setBounds(375, 100, 250, 50);
@@ -42,7 +47,7 @@ public class GuiGridDisplay implements ActionListener {
         gridLayout.setVgap(10);
         mainPanel.setLayout(gridLayout);
 
-
+        //Displaying the grid.
         for (int i = 0; i < gridSize.getX(); i++) {
             for (int j = 0; j < gridSize.getY(); j++) {
                 int retrieved = minesweeperGrid.getElement(i, j);
@@ -59,54 +64,59 @@ public class GuiGridDisplay implements ActionListener {
                 buttons[i][j] = buttonMine;
             }
         }
-
+        
+        //To refresh imediatly the display.
         mainPanel.updateUI();
-   }
+    }
 
+    // Action of clicking on the buttons.
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof MineButton) {
             var clickedButton = (MineButton) e.getSource();
-            if (clickedButton.IsBlanckAndActive()) {
+            if (clickedButton.isBlanckAndActive()) {
                 clickedButton.showValue();
-                FlipNeighboursIfBlanck(clickedButton.GetRow(), clickedButton.GetColumn());
+                FlipNeighboursIfBlanck(clickedButton.getRow(), clickedButton.getColumn());
             } else {
                 clickedButton.showValue();
             }
         }
     }
 
+    /**
+     * Recursevly checking if the neighbouting buttons are empty.
+     */
     private void FlipNeighboursIfBlanck(int row, int column) {
         // left
         if (column > 0) {
             var leftNeighbour = buttons[row][column - 1];
-            if (leftNeighbour.IsBlanckAndActive()) {
+            if (leftNeighbour.isBlanckAndActive()) {
                 leftNeighbour.showValue();
-                FlipNeighboursIfBlanck(leftNeighbour.GetRow(), leftNeighbour.GetColumn());
+                FlipNeighboursIfBlanck(leftNeighbour.getRow(), leftNeighbour.getColumn());
             }
         }
         // right
         if (column < (buttons[0].length - 1)) {
             var rightNeighbour = buttons[row][column + 1];
-            if (rightNeighbour.IsBlanckAndActive()) {
+            if (rightNeighbour.isBlanckAndActive()) {
                 rightNeighbour.showValue();
-                FlipNeighboursIfBlanck(rightNeighbour.GetRow(), rightNeighbour.GetColumn());
+                FlipNeighboursIfBlanck(rightNeighbour.getRow(), rightNeighbour.getColumn());
             }
         }
         // top
         if (row > 0) {
             var topNeighbour = buttons[row - 1][column];
-            if (topNeighbour.IsBlanckAndActive()) {
+            if (topNeighbour.isBlanckAndActive()) {
                 topNeighbour.showValue();
-                FlipNeighboursIfBlanck(topNeighbour.GetRow(), topNeighbour.GetColumn());
+                FlipNeighboursIfBlanck(topNeighbour.getRow(), topNeighbour.getColumn());
             }
         }
         // bottom
         if (row < (buttons.length - 1)) {
             var bottomNeighbour = buttons[row + 1][column];
-            if (bottomNeighbour.IsBlanckAndActive()) {
+            if (bottomNeighbour.isBlanckAndActive()) {
                 bottomNeighbour.showValue();
-                FlipNeighboursIfBlanck(bottomNeighbour.GetRow(), bottomNeighbour.GetColumn());
+                FlipNeighboursIfBlanck(bottomNeighbour.getRow(), bottomNeighbour.getColumn());
             }
         }
     }
