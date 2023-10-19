@@ -1,53 +1,59 @@
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.*;
 
 /**
 * Displays grid in the GUI.
 */
-public class GuiGridDisplay implements ActionListener {
+public class GuiGridDisplay implements MouseListener {
+    private JFrame mainFrame;
+    private JLabel textInControlPanel;
     private MinesweeperGrid minesweeperGrid;
     private MineButton[][] buttons;
+    private int numberOfFoundMines;
+    Font fontForText = new Font("Serif", Font.BOLD, 30);
     
     /**
-     * Filling the buttons with the value of the grid.
+     * Making the grid.
      */
     public GuiGridDisplay(MinesweeperGrid minesweeperGrid) {
         this.minesweeperGrid = minesweeperGrid;
         Point gridSize = minesweeperGrid.getSize();
         buttons = new MineButton[(int) gridSize.getX()][ (int) gridSize.getY()];
+        numberOfFoundMines = 0;
     }
 
     /**
-     * method to display the grid.
+     * Method to display the grid.
      */
     public void display() {
-        //Setting the frame.
-        JFrame frame = new JFrame();
-        frame.setLayout(null);
-        frame.setTitle("Minsweeper");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000, 1000);
-        frame.setVisible(true);
+        numberOfFoundMines = 0;
+        mainFrame = new JFrame();
+        mainFrame.setLayout(null);
+        mainFrame.setTitle("Minsweeper");
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.setSize(1000, 1000);
+        mainFrame.setVisible(true);
 
-        //Setting the controlPanel.
         JPanel controlPanel = new JPanel();
         controlPanel.setBackground(Color.white);
         controlPanel.setBounds(375, 100, 250, 50);
-        controlPanel.add(new JLabel("Control panel"));
-        frame.add(controlPanel);
+        textInControlPanel = new JLabel();
+        textInControlPanel.setFont(fontForText);
+        updateMineCount();
+        controlPanel.add(textInControlPanel);
+        mainFrame.add(controlPanel);
 
         JPanel mainPanel = new JPanel();
         mainPanel.setBounds(125, 200, 750, 550);
-        frame.add(mainPanel);
+        mainFrame.add(mainPanel);
         Point gridSize = minesweeperGrid.getSize();
         var gridLayout = new GridLayout((int) gridSize.getX(), (int) gridSize.getY());
         gridLayout.setHgap(5);
         gridLayout.setVgap(10);
         mainPanel.setLayout(gridLayout);
 
-        //Displaying the grid.
         for (int i = 0; i < gridSize.getX(); i++) {
             for (int j = 0; j < gridSize.getY(); j++) {
                 int retrieved = minesweeperGrid.getElement(i, j);
@@ -57,68 +63,132 @@ public class GuiGridDisplay implements ActionListener {
                 } 
                 
                 Boolean buttonIsBlanck = (0 == retrieved);
-                var buttonMine = new MineButton(buttonValueToShow, buttonIsBlanck, i, j);
-                buttonMine.addActionListener(this);
+                Boolean buttonHasMine = (100 == retrieved);
+                var buttonMine = 
+                    new MineButton(buttonValueToShow, buttonIsBlanck, buttonHasMine, i, j);
+                buttonMine.addMouseListener(this);
+                buttonMine.setFont(fontForText);
                 buttonMine.setBackground(Color.pink);
                 mainPanel.add(buttonMine);
                 buttons[i][j] = buttonMine;
             }
         }
-        
-        //To refresh imediatly the display.
+
         mainPanel.updateUI();
-    }
+   }
 
-    // Action of clicking on the buttons.
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() instanceof MineButton) {
-            var clickedButton = (MineButton) e.getSource();
-            if (clickedButton.isBlanckAndActive()) {
-                clickedButton.showValue();
-                FlipNeighboursIfBlanck(clickedButton.getRow(), clickedButton.getColumn());
-            } else {
-                clickedButton.showValue();
-            }
-        }
-    }
-
-    /**
-     * Recursevly checking if the neighbouting buttons are empty.
-     */
-    private void FlipNeighboursIfBlanck(int row, int column) {
-        // left
+    private void FlipNeighboursIfBlanck(MineButton buttonToCheck) {
+        int row = buttonToCheck.getRow();
+        int column = buttonToCheck.getColumn();
+        // Checking left neighbour.
         if (column > 0) {
             var leftNeighbour = buttons[row][column - 1];
             if (leftNeighbour.isBlanckAndActive()) {
                 leftNeighbour.showValue();
-                FlipNeighboursIfBlanck(leftNeighbour.getRow(), leftNeighbour.getColumn());
+                FlipNeighboursIfBlanck(leftNeighbour);
             }
         }
-        // right
+        // Checking right neighbour
         if (column < (buttons[0].length - 1)) {
             var rightNeighbour = buttons[row][column + 1];
             if (rightNeighbour.isBlanckAndActive()) {
                 rightNeighbour.showValue();
-                FlipNeighboursIfBlanck(rightNeighbour.getRow(), rightNeighbour.getColumn());
+                FlipNeighboursIfBlanck(rightNeighbour);
             }
         }
-        // top
+        // Checking top neighbour
         if (row > 0) {
             var topNeighbour = buttons[row - 1][column];
             if (topNeighbour.isBlanckAndActive()) {
                 topNeighbour.showValue();
-                FlipNeighboursIfBlanck(topNeighbour.getRow(), topNeighbour.getColumn());
+                FlipNeighboursIfBlanck(topNeighbour);
             }
         }
-        // bottom
+        // Checking bottom neighbour
         if (row < (buttons.length - 1)) {
             var bottomNeighbour = buttons[row + 1][column];
             if (bottomNeighbour.isBlanckAndActive()) {
                 bottomNeighbour.showValue();
-                FlipNeighboursIfBlanck(bottomNeighbour.getRow(), bottomNeighbour.getColumn());
+                FlipNeighboursIfBlanck(bottomNeighbour);
             }
         }
     }
-    jjjj
+
+    @Override
+    public void mouseClicked(MouseEvent e)  {
+        if (e.getSource() instanceof MineButton) {
+            var clickedButton = (MineButton) e.getSource();
+            if (!clickedButton.isEnabled()) {
+                return;
+            }
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                if (clickedButton.isBlanckAndActive()) {
+                    clickedButton.showValue();
+                    FlipNeighboursIfBlanck(clickedButton);
+                } else {
+                    if (clickedButton.isMine()) {
+                        RestarGame(false, "Here is IS mine, bye, bye");
+                        return;
+                    }
+                    clickedButton.showValue();
+                }
+            } else if (SwingUtilities.isRightMouseButton(e)) {
+                // With the red colour you indicate it is a mine             
+                if (clickedButton.isMine()) {
+                    clickedButton.setBackground(Color.red);
+                    clickedButton.showValue();
+                    numberOfFoundMines++;
+                    updateMineCount();
+                    if (numberOfFoundMines == 10) {
+                        RestarGame(true, "YOU WON!!!");
+                    }
+                } else {
+                    RestarGame(false, "Here is NO Mine, bye, bye");
+                    return;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        //Not needeed.
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        //Not needeed.
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        //Not needeed.
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        //Not needeed.
+    }
+
+    private void RestarGame(Boolean isWin, String reasonToRestartGame) {
+        String prefixMessage = "LOOSER";
+        int messageType = JOptionPane.ERROR_MESSAGE;
+        if (isWin) {
+            messageType = JOptionPane.INFORMATION_MESSAGE;
+            prefixMessage = "LUCKY";
+        }
+        JOptionPane.showMessageDialog(
+            null, 
+            prefixMessage + "!!!\n" + reasonToRestartGame,
+            "GAME OVER",
+            messageType
+        );
+        mainFrame.dispose();
+        display();
+    }
+
+    private void updateMineCount() {
+        textInControlPanel.setText("Mine count = " + Integer.toString(numberOfFoundMines));
+    }
+
 }
