@@ -28,7 +28,7 @@ public class GuiGridDisplay implements MouseListener {
      * Method to display the grid.
      */
     public void display() {
-        numberOfFoundMines = 0;
+        numberOfFoundMines = minesweeperGrid.numberOfMines();
         mainFrame = new JFrame();
         mainFrame.setLayout(null);
         mainFrame.setTitle("Minsweeper");
@@ -137,9 +137,9 @@ public class GuiGridDisplay implements MouseListener {
                 if (clickedButton.isMine()) {
                     clickedButton.setBackground(Color.red);
                     clickedButton.showValue();
-                    numberOfFoundMines++;
+                    numberOfFoundMines--;
                     updateMineCount();
-                    if (numberOfFoundMines == 10) {
+                    if (numberOfFoundMines == 0) {
                         RestarGame(true, "YOU WON!!!");
                     }
                 } else {

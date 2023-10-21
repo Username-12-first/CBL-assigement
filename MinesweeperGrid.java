@@ -31,6 +31,21 @@ public class MinesweeperGrid {
         grid = defaultGrid;
     }
 
+    /**
+     * Couting the number of mines in the grid.
+     */
+    public int numberOfMines() {
+        int mineCount = 0;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (grid[j][i] == 100) {
+                    mineCount++;
+                }
+            }
+        }
+        return mineCount;
+    }
+
     private int size = 9;
 
     public int getElement(int row, int column) {
