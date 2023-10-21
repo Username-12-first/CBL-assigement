@@ -1,4 +1,5 @@
-import javax.swing.JButton;
+import java.awt.*;
+import javax.swing.*;
 
 /**
 * Button to be used in the Miner game UI.
@@ -25,6 +26,9 @@ public class MineButton extends JButton {
         this.row = row;
         this.column = column;
 
+        var fontForText = new Font("Serif", Font.BOLD, 40);
+        setFont(fontForText);
+        setBackground(Color.pink);
     }
 
     public int getRow() {
@@ -47,6 +51,14 @@ public class MineButton extends JButton {
      * Show hidden values.
      */
     public void showValue() {
+        if (blanck) {
+            setBackground(Color.white);
+        } else if (mine) {
+            setBackground(Color.red);
+        } else {
+            setBackground(Color.yellow);
+        }
+
         setText(valueToShow);
         setEnabled(false);
     }

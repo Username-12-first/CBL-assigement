@@ -25,6 +25,7 @@ public class MinesweeperGrid {
         {0, 3, 100, 4, 1, 0, 0, 0, 0},   
         {0, 2, 100, 100, 1, 0, 0, 0, 0}, 
     };
+
     private int[][] grid;
 
     public MinesweeperGrid() {
@@ -36,9 +37,10 @@ public class MinesweeperGrid {
      */
     public int numberOfMines() {
         int mineCount = 0;
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                if (grid[j][i] == 100) {
+        var size = getSize();
+        for (int i = 0; i < size.getX(); i++) {
+            for (int j = 0; j < size.getY(); j++) {
+                if (isMine(i, j)) {
                     mineCount++;
                 }
             }
@@ -46,7 +48,19 @@ public class MinesweeperGrid {
         return mineCount;
     }
 
-    private int size = 9;
+    /**
+     * Retuns if the cell has blanck value.
+     */
+    public boolean isBlanck(int row, int column) {
+        return (0 == getElement(row, column));
+    }
+
+    /**
+     * Retuns if the cell is a mine.
+     */
+    public boolean isMine(int row, int column) {
+        return (100 == getElement(row, column));
+    }
 
     public int getElement(int row, int column) {
         if ((row < 0) || (row > grid.length)) {
@@ -66,16 +80,16 @@ public class MinesweeperGrid {
      * method to print the grid.
      */
     public void print() {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                int retrieved = grid[i][j];
-                if (retrieved == 100) {
+        var size = getSize();
+        for (int i = 0; i < size.getX(); i++) {
+            for (int j = 0; j < size.getY(); j++) {
+                if (isMine(i, j)) {
                     System.out.print("*");
-                    System.out.print(" ");
                 } else {
+                    int retrieved = grid[i][j];
                     System.out.print(retrieved);
-                    System.out.print(" ");
                 }
+                System.out.print(" ");
             }
             System.out.println(" ");
         }

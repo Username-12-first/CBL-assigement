@@ -12,7 +12,6 @@ public class GuiGridDisplay implements MouseListener {
     private MinesweeperGrid minesweeperGrid;
     private MineButton[][] buttons;
     private int numberOfFoundMines;
-    Font fontForText = new Font("Serif", Font.BOLD, 30);
     
     /**
      * Making the grid.
@@ -27,23 +26,34 @@ public class GuiGridDisplay implements MouseListener {
     /**
      * Method to display the grid.
      */
-    public void display() {
+    public void display(int windowWidth, int windowHeight) {
+        String gameTitle = "Minesweeper";
         numberOfFoundMines = minesweeperGrid.numberOfMines();
         mainFrame = new JFrame();
         mainFrame.setLayout(null);
-        mainFrame.setTitle("Minsweeper");
+        mainFrame.setTitle(gameTitle);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainFrame.setSize(1000, 1000);
+        mainFrame.setSize(windowWidth, windowHeight);
         mainFrame.setVisible(true);
+
+        var fontForText = new Font("Serif", Font.BOLD, 30);
+        
+        JPanel titlePanel = new JPanel();
+        titlePanel.setBackground(Color.white);
+        titlePanel.setBounds(375, 10, 250, 50);
+        var titleTextInControlPanel = new JLabel(gameTitle.toUpperCase());
+        titleTextInControlPanel.setFont(fontForText);
+        titlePanel.add(titleTextInControlPanel); 
+        mainFrame.add(titlePanel);
 
         JPanel controlPanel = new JPanel();
         controlPanel.setBackground(Color.white);
         controlPanel.setBounds(375, 100, 250, 50);
         textInControlPanel = new JLabel();
         textInControlPanel.setFont(fontForText);
-        updateMineCount();
-        controlPanel.add(textInControlPanel);
+        controlPanel.add(textInControlPanel); 
         mainFrame.add(controlPanel);
+        updateMineCount();
 
         JPanel mainPanel = new JPanel();
         mainPanel.setBounds(125, 200, 750, 550);
@@ -57,18 +67,17 @@ public class GuiGridDisplay implements MouseListener {
         for (int i = 0; i < gridSize.getX(); i++) {
             for (int j = 0; j < gridSize.getY(); j++) {
                 int retrieved = minesweeperGrid.getElement(i, j);
-                String buttonValueToShow = Integer.toString(retrieved);
-                if (retrieved == 100) {
+                String buttonValueToShow = Integer.toString(retrieved);               
+                Boolean buttonIsBlanck = minesweeperGrid.isBlanck(i, j);
+                Boolean buttonHasMine = minesweeperGrid.isMine(i, j);
+                if (buttonIsBlanck) {
+                    buttonValueToShow = "";
+                } else if (buttonHasMine) {
                     buttonValueToShow = "*";
                 } 
-                
-                Boolean buttonIsBlanck = (0 == retrieved);
-                Boolean buttonHasMine = (100 == retrieved);
                 var buttonMine = 
                     new MineButton(buttonValueToShow, buttonIsBlanck, buttonHasMine, i, j);
                 buttonMine.addMouseListener(this);
-                buttonMine.setFont(fontForText);
-                buttonMine.setBackground(Color.pink);
                 mainPanel.add(buttonMine);
                 buttons[i][j] = buttonMine;
             }
@@ -135,7 +144,6 @@ public class GuiGridDisplay implements MouseListener {
             } else if (SwingUtilities.isRightMouseButton(e)) {
                 // With the red colour you indicate it is a mine             
                 if (clickedButton.isMine()) {
-                    clickedButton.setBackground(Color.red);
                     clickedButton.showValue();
                     numberOfFoundMines--;
                     updateMineCount();

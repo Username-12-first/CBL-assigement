@@ -9,6 +9,8 @@ import java.util.Properties;
 public class MinesweeperApp {
 
     public static void main(String[] args) {
+        int windowWidth = 1500;
+        int windowHeight = 1500;
         var grid = new MinesweeperGrid();
         grid.print();
         
@@ -26,11 +28,13 @@ public class MinesweeperApp {
             System.out.println(prop.getProperty("minegrid.dim.rows"));
             System.out.println(prop.getProperty("minegrid.dim.cols"));
             System.out.println(prop.getProperty("window.size.width.pixels"));
+            windowWidth = Integer.parseInt(prop.getProperty("window.size.width.pixels"));
             System.out.println(prop.getProperty("window.size.height.pixels"));
+            windowHeight = Integer.parseInt(prop.getProperty("window.size.height.pixels"));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
         var guiDisplay = new GuiGridDisplay(grid);
-        guiDisplay.display();
+        guiDisplay.display(windowWidth, windowHeight);
     }
 }
