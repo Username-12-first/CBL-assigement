@@ -112,7 +112,7 @@ public class MinesweeperMain {
     // The timer used to tick the timer counter every second.
     private MinesweeperTimerTask timerTask;
     // The following configuration parameters are read/overrridden from the config.properties
-    public String ICON_PATH = "src/main/resources/icons/";
+    public String ICON_PATH = "src/resources/icons/";
     public String ICON_SUFFIX = ".png";     
     public Difficulty DIFFICULTY = Difficulty.BEGINNER;
     public int N_MINES = 10;
@@ -133,7 +133,7 @@ public class MinesweeperMain {
     // Reads key configuration prameters from the properties file
     private void readProperties(){
         //Read the game configuration parameters from the config.properties file
-        String configPath =  "src/main/resources/config.properties";
+        String configPath =  "src/resources/config.properties";
         try (InputStream input = new FileInputStream(configPath)) {
             // Create a new Properties object
             Properties prop = new Properties();
