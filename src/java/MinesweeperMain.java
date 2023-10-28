@@ -250,8 +250,7 @@ public class MinesweeperMain {
         gameStatus = GameStatus.ONGOING;
         pnlMineSweeperBoard.restartGame();
         pnlTopControl.prepareStart();          
-        timerTask.seconds = 0;
-        // pnlMineSweeperBoard.repaint();
+        timerTask.setSeconds(0);
         redrawFrame();  
     }
 
@@ -270,6 +269,7 @@ public class MinesweeperMain {
         gameStatus = GameStatus.ONGOING;
         //Start the timer
         timerTask = new MinesweeperTimerTask();
+        // The timer will tick every 1000ms = 1s
         new Timer().schedule(timerTask, 0, 1000);
 
         EventQueue.invokeLater(() -> {
@@ -288,10 +288,18 @@ public class MinesweeperMain {
      * Updates the timer label on the top control panel every second.
      */
     public class MinesweeperTimerTask extends TimerTask{
-        public static int seconds = 0;
+        // Keeps track of the seconds passed since game (re)start
+        private int seconds = 0;
+        
         public void run() {
             pnlTopControl.setTime(seconds++);
+        }
+
+        // The setter is used to reset the timer seconds to 0 on a restart
+        public void setSeconds(int seconds) {
+            this.seconds = seconds;
         } 
+
     }
 
 }

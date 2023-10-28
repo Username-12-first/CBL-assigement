@@ -2,13 +2,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.util.Timer;
-
-import javax.management.openmbean.OpenDataException;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -17,8 +10,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+/**
+ * The control panel that sits at the top row of the mine field frame. It
+ * displays the number of mines left in the game, the time in seconds that
+ * has passed since the (res)start, a reset button, shown as the smiley emoji
+ * and difficulty level control buttons. Pressing the smiley button or the 
+ * level buttons restarts the game at any given time. 
+ */
 public class TopControlPanel extends JPanel {
-
+    // The main control object that manages the this top panel
     MinesweeperMain mainControl;
 
     JLabel lblMineCounter;
@@ -37,6 +37,7 @@ public class TopControlPanel extends JPanel {
     private ImageIcon ICN_TWO;
     private ImageIcon ICN_THREE;
 
+    // Constructor that takes in the main control object
     public TopControlPanel(MinesweeperMain mainControl){
         this.mainControl = mainControl;
         initIcons();
@@ -51,6 +52,7 @@ public class TopControlPanel extends JPanel {
         lblMineCounter.setText("Mines: " + minesLeft);        
     }   
     
+    // The icons are seen on the buttons of the panel to control the game
     private void initIcons(){
         String iconPath = mainControl.ICON_PATH;
         String suffix = mainControl.ICON_SUFFIX;
@@ -63,6 +65,7 @@ public class TopControlPanel extends JPanel {
         ICN_THREE = new ImageIcon(iconPath + "three" + suffix);
     }
 
+    // Initializes the GUI elements, sets their layouts and adds listeners
     public void initialize(){
         lblMineCounter = new JLabel();
         lblMineCounter.setText("Mines: "+mainControl.getMinesLeft());
@@ -138,22 +141,21 @@ public class TopControlPanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridwidth = GridBagConstraints.REMAINDER;       
         add(lblTimer, gbc);
-    
-        //add(Box.createRigidArea(new Dimension(0,5)));
     }
 
+    // When the game is won, the controller calls this method to set the
+    // smiley face on the reset button
     public void gameWon(){
         btnRestart.setIcon(ICN_SMILEY_COOL);
-  //    lblMineCounter.setText("0");
-       // timer.cancel();
-  //    repaint();
-    }
-    public void gameLost(){
-        btnRestart.setIcon(ICN_SMILEY_SAD);
-//        lblMineCounter.setText("0");
-       // repaint();
     }
 
+    // When the game is lost, the controller calls this method to set the
+    // sad smiley face on the reset button
+    public void gameLost(){
+        btnRestart.setIcon(ICN_SMILEY_SAD);
+    }
+
+    // Called by main control to setup the panel when the game is (re)started
     public void prepareStart(){
         btnRestart.setIcon(ICN_SMILEY);
         setMinesLeft(mainControl.getMinesLeft());
