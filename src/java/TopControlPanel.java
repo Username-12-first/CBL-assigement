@@ -2,13 +2,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.util.Timer;
-
-import javax.management.openmbean.OpenDataException;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -138,20 +131,14 @@ public class TopControlPanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridwidth = GridBagConstraints.REMAINDER;       
         add(lblTimer, gbc);
-    
-        //add(Box.createRigidArea(new Dimension(0,5)));
     }
 
     public void gameWon(){
         btnRestart.setIcon(ICN_SMILEY_COOL);
-  //    lblMineCounter.setText("0");
-       // timer.cancel();
-  //    repaint();
     }
+
     public void gameLost(){
         btnRestart.setIcon(ICN_SMILEY_SAD);
-//        lblMineCounter.setText("0");
-       // repaint();
     }
 
     public void prepareStart(){
