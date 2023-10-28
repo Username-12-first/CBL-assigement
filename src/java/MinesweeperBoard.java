@@ -34,7 +34,7 @@ public class MinesweeperBoard extends JPanel {
     private int BOARD_WIDTH = 0;
     private int BOARD_HEIGHT = 0;
     private int minesLeft;
-    private final JLabel statusbar;
+    private final JLabel lblStatus;
 
     private MinesweeperMain mainControl;
 
@@ -42,7 +42,7 @@ public class MinesweeperBoard extends JPanel {
      * The constructor that takes in the main Control object and the status bat
      */
     public MinesweeperBoard(JLabel statusbar, MinesweeperMain mainControl) {
-        this.statusbar = statusbar;
+        this.lblStatus = statusbar;
         this.mainControl = mainControl;
         addMouseListener(new MinesAdapter());
         initIcons();
@@ -77,7 +77,7 @@ public class MinesweeperBoard extends JPanel {
      */
     public void initBoard() { 
         minesLeft = mainControl.getMinesLeft();
-        statusbar.setText(Integer.toString(minesLeft));            
+        lblStatus.setText(Integer.toString(minesLeft));            
     }
 
     /*
@@ -161,15 +161,10 @@ public class MinesweeperBoard extends JPanel {
         if (mainControl.getGameStatus()==MinesweeperMain.GameStatus.ONGOING){
             if (cellsYetToDiscover == 0){
                 mainControl.gameWon();
-                statusbar.setText("Game won");
+                lblStatus.setText("Game won");
             }
-        }else if (mainControl.getGameStatus()==MinesweeperMain.GameStatus.LOST){
-            statusbar.setText("Game lost");
-        }else if (mainControl.getGameStatus()==MinesweeperMain.GameStatus.WON){
-            statusbar.setText("Game won");
         }
     }
-
 
     // This method is called to return the icon for a number cell.
     // If the cell was not a number (unlkely case), it return empty tile
@@ -230,17 +225,17 @@ public class MinesweeperBoard extends JPanel {
                             if (minesLeft > 0) {
                                 cell.setIconType(MinefieldModel.IconType.FLAG);
                                 minesLeft--;
-                                statusbar.setText(minesLeft + "");
+                                lblStatus.setText(minesLeft + "");
                                 mainControl.setMinesLeft(minesLeft);
                             } else {
-                                statusbar.setText("Game won!");
+                                lblStatus.setText("Game won!");
                                 mainControl.gameWon();
                             }
                         } else if (cell.getIconType() == MinefieldModel.IconType.FLAG) {
                             cell.setIconType(MinefieldModel.IconType.TILE_COVERED);
                             minesLeft++;
                             String msg = Integer.toString(minesLeft);
-                            statusbar.setText(msg);
+                            lblStatus.setText(msg);
                             mainControl.setMinesLeft(minesLeft);
                         }
 
@@ -251,15 +246,15 @@ public class MinesweeperBoard extends JPanel {
                             if (minesLeft > 0) {
                                 cell.setIconType(MinefieldModel.IconType.FLAG);
                                 minesLeft--;
-                                statusbar.setText(minesLeft + "");
+                                lblStatus.setText(minesLeft + "");
                                 mainControl.setMinesLeft(minesLeft);
                             } else {// Normally this case should not happen
-                                statusbar.setText("No mines left");
+                                lblStatus.setText("No mines left");
                             }
                         } else if (cell.getIconType() == MinefieldModel.IconType.FLAG) {
                             cell.setIconType(MinefieldModel.IconType.TILE_COVERED);
                             minesLeft++;
-                            statusbar.setText(minesLeft + "");
+                            lblStatus.setText(minesLeft + "");
                             mainControl.setMinesLeft(minesLeft);
                         }
                     }
@@ -269,7 +264,7 @@ public class MinesweeperBoard extends JPanel {
                     }
                     if (cell.getContentType() == MinefieldModel.ContentType.MINE) {
                         cell.setIconType(MinefieldModel.IconType.MINE_EXPL);
-                        mainControl.gameLost();
+                        mainControl.gameLost("Hit mine");
                     }
                     if (cell.getContentType() == MinefieldModel.ContentType.ZERO) {
                         mainControl.discoverConnectedEmptyCells((cRow * mainControl.N_COLS) + cCol);
@@ -278,5 +273,9 @@ public class MinesweeperBoard extends JPanel {
             }
             repaint();
         }
+    }
+
+    public void setStatus(String statusText) {
+        lblStatus.setText(statusText);
     }
 }

@@ -70,11 +70,12 @@ public class TopControlPanel extends JPanel {
         lblMineCounter = new JLabel();
         lblMineCounter.setText("Mines: "+mainControl.getMinesLeft());
         lblTimer = new JLabel("Time: ");
+        lblTimer.setPreferredSize(new Dimension(50,32));
         btnRestart = new JButton(ICN_SMILEY);
         btnRestart.setToolTipText("Restart Game");        
-        btnRestart.setSize(40,40);
-        btnRestart.setPreferredSize(new Dimension(40,40));
-        btnRestart.setMaximumSize(new Dimension(38,38));
+        //btnRestart.setSize(40,40);
+        btnRestart.setPreferredSize(new Dimension(36,36));
+       // btnRestart.setMaximumSize(new Dimension(38,38));
         btnRestart.setOpaque(false);
         btnRestart.addMouseListener(new java.awt.event.MouseAdapter(){
             public void mousePressed(java.awt.event.MouseEvent evt){

@@ -129,7 +129,8 @@ public class MinesweeperMain {
     private int N_MINES_EXP = 10;
     private int N_ROWS_EXP = 9;
     private int N_COLS_EXP = 9;
-
+     //There is a timeout per difficulty level. By default, effectively no limit
+    private int[] TIMEOUT = new int[]{Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE };
     // Reads key configuration prameters from the properties file
     private void readProperties(){
         //Read the game configuration parameters from the config.properties file
@@ -153,6 +154,9 @@ public class MinesweeperMain {
             DIFFICULTY = Difficulty.values()[difficulty];
             setParametersBasedOnDifficulty(DIFFICULTY);
             CELL_SIZE_PIX = Integer.parseInt(prop.getProperty("cell.size.pixels"));
+            TIMEOUT[0] = Integer.parseInt(prop.getProperty("timeout.seconds.beginner"));
+            TIMEOUT[1] = Integer.parseInt(prop.getProperty("timeout.seconds.intermediate"));
+            TIMEOUT[2] = Integer.parseInt(prop.getProperty("timeout.seconds.expert"));
         } catch (IOException ex) {
             System.out.println("Error occuurred while reading config.properties file. Keeping default values.");
             ex.printStackTrace();
@@ -229,9 +233,10 @@ public class MinesweeperMain {
 
     // Handles the chores for loss of the game. Specifically, the displays
     // in the top control panel and the minefield are updated accordingly
-    public void gameLost(){
+    public void gameLost(String reason){
         gameStatus = GameStatus.LOST;
         pnlTopControl.gameLost();
+        pnlMineSweeperBoard.setStatus("Game Lost: " +reason);
         redrawFrame(); 
     }
 
@@ -272,10 +277,13 @@ public class MinesweeperMain {
         // The timer will tick every 1000ms = 1s
         new Timer().schedule(timerTask, 0, 1000);
 
-        EventQueue.invokeLater(() -> {
-            var ex = frmMineSweeper; //new MinesweeperFrame(minefieldModel);
-            ex.setVisible(true);        
-        });
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+              frmMineSweeper.setVisible(true);
+            }
+          });
+
     }
 
 
@@ -290,9 +298,14 @@ public class MinesweeperMain {
     public class MinesweeperTimerTask extends TimerTask{
         // Keeps track of the seconds passed since game (re)start
         private int seconds = 0;
-        
+
         public void run() {
-            pnlTopControl.setTime(seconds++);
+            if (gameStatus == GameStatus.ONGOING) {
+                pnlTopControl.setTime(seconds++);
+                if (seconds > TIMEOUT[DIFFICULTY.ordinal()]) {
+                    gameLost("Timeout");
+                }
+            }
         }
 
         // The setter is used to reset the timer seconds to 0 on a restart
