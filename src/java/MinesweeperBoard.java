@@ -16,23 +16,23 @@ import javax.swing.JPanel;
  * status panel at the bottom.
  */
 public class MinesweeperBoard extends JPanel {
-    private ImageIcon ICN_TILE_EMPTY;
-    private ImageIcon ICN_TILE_COVERED;
-    private ImageIcon ICN_MINE;
-    private ImageIcon ICN_MINE_EXPL;
-    private ImageIcon ICN_FLAG;
-    private ImageIcon ICN_FLAG_CROSSED;
-    private ImageIcon ICN_ONE;
-    private ImageIcon ICN_TWO;
-    private ImageIcon ICN_THREE;
-    private ImageIcon ICN_FOUR;
-    private ImageIcon ICN_FIVE;
-    private ImageIcon ICN_SIX;
-    private ImageIcon ICN_SEVEN;
-    private ImageIcon ICN_EIGHT;
+    private ImageIcon emptyIconTitle;
+    private ImageIcon covertIconTitle;
+    private ImageIcon mineIcon;
+    private ImageIcon mineIconExplosion;
+    private ImageIcon flagIcon;
+    private ImageIcon flagIconCrosses;
+    private ImageIcon oneIcon;
+    private ImageIcon twoIcon;
+    private ImageIcon threeIcon;
+    private ImageIcon fourIcon;
+    private ImageIcon fiveIcon;
+    private ImageIcon sixIcon;
+    private ImageIcon sevenIcon;
+    private ImageIcon eightIcon;
 
-    private int BOARD_WIDTH = 0;
-    private int BOARD_HEIGHT = 0;
+    private int boardWith = 0;
+    private int boardHeight = 0;
     private int minesLeft;
     private final JLabel lblStatus;
 
@@ -54,22 +54,22 @@ public class MinesweeperBoard extends JPanel {
      * Creates the icons for the cells.
      */
     private void initIcons() {
-        String iconPath = mainControl.ICON_PATH;
-        String suffix = mainControl.ICON_SUFFIX;
-        ICN_TILE_EMPTY = new ImageIcon(iconPath + "tile-empty" + suffix);
-        ICN_TILE_COVERED = new ImageIcon(iconPath + "tile-covered" + suffix);
-        ICN_MINE = new ImageIcon(iconPath + "mine" + suffix);        
-        ICN_MINE_EXPL = new ImageIcon(iconPath + "mine-exploded" + suffix);
-        ICN_FLAG = new ImageIcon(iconPath + "flag" + suffix);
-        ICN_FLAG_CROSSED = new ImageIcon(iconPath + "flag-crossed" + suffix);
-        ICN_ONE = new ImageIcon(iconPath + "one" + suffix);
-        ICN_TWO = new ImageIcon(iconPath + "two" + suffix);
-        ICN_THREE = new ImageIcon(iconPath + "three" + suffix);
-        ICN_FOUR = new ImageIcon(iconPath + "four" + suffix);
-        ICN_FIVE = new ImageIcon(iconPath + "five" + suffix);
-        ICN_SIX = new ImageIcon(iconPath + "six" + suffix);
-        ICN_SEVEN = new ImageIcon(iconPath + "seven" + suffix);
-        ICN_EIGHT = new ImageIcon(iconPath + "eight" + suffix);
+        String iconPath = mainControl.iconPath();
+        String suffix = mainControl.iconFileExtension();
+        emptyIconTitle = new ImageIcon(iconPath + "tile-empty" + suffix);
+        covertIconTitle = new ImageIcon(iconPath + "tile-covered" + suffix);
+        mineIcon = new ImageIcon(iconPath + "mine" + suffix);        
+        mineIconExplosion = new ImageIcon(iconPath + "mine-exploded" + suffix);
+        flagIcon = new ImageIcon(iconPath + "flag" + suffix);
+        flagIconCrosses = new ImageIcon(iconPath + "flag-crossed" + suffix);
+        oneIcon = new ImageIcon(iconPath + "one" + suffix);
+        twoIcon = new ImageIcon(iconPath + "two" + suffix);
+        threeIcon = new ImageIcon(iconPath + "three" + suffix);
+        fourIcon = new ImageIcon(iconPath + "four" + suffix);
+        fiveIcon = new ImageIcon(iconPath + "five" + suffix);
+        sixIcon = new ImageIcon(iconPath + "six" + suffix);
+        sevenIcon = new ImageIcon(iconPath + "seven" + suffix);
+        eightIcon = new ImageIcon(iconPath + "eight" + suffix);
     }
     
     /**
@@ -86,9 +86,9 @@ public class MinesweeperBoard extends JPanel {
      * information taken from the Controller object
      */
     public void initGUI() {
-        BOARD_WIDTH = mainControl.numberOfColumns() * this.mainControl.cellSizeInPixels() + 1;
-        BOARD_HEIGHT = mainControl.numberOfRows() * this.mainControl.cellSizeInPixels() + 1;
-        setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
+        boardWith = mainControl.numberOfColumns() * this.mainControl.cellSizeInPixels() + 1;
+        boardHeight = mainControl.numberOfRows() * this.mainControl.cellSizeInPixels() + 1;
+        setPreferredSize(new Dimension(boardWith, boardHeight));
     }
 
     /**
@@ -116,26 +116,28 @@ public class MinesweeperBoard extends JPanel {
                 MineFieldCell cell = mainControl.getCell((i * mainControl.numberOfColumns()) + j);
                 switch (cell.getIconType()) {
                     case TILE_EMPTY:
-                        imageToDraw = ICN_TILE_EMPTY.getImage();
+                        imageToDraw = emptyIconTitle.getImage();
                         break;
                     case NUMBER: 
                         imageToDraw = getIconForNumberCell(cell);            
                         break;
                     case TILE_COVERED:
                         cellsYetToDiscover++;
-                        imageToDraw = ICN_TILE_COVERED.getImage();;
+                        imageToDraw = covertIconTitle.getImage();;
                         break;
                     case MINE:
-                        imageToDraw = ICN_MINE.getImage();
+                        imageToDraw = mineIcon.getImage();
                         break;
                     case MINE_EXPL:
-                        imageToDraw = ICN_MINE_EXPL.getImage();;
+                        imageToDraw = mineIconExplosion.getImage();;
                         break;                        
                     case FLAG:
-                        imageToDraw = ICN_FLAG.getImage();;
+                        imageToDraw = flagIcon.getImage();;
                         break;
                     case REVERT_FLAG:
-                        imageToDraw = ICN_TILE_COVERED.getImage();
+                        imageToDraw = covertIconTitle.getImage();
+                        break;
+                    default:
                         break;
 
                 }
@@ -143,11 +145,11 @@ public class MinesweeperBoard extends JPanel {
                 if (mainControl.getGameStatus() != MinesweeperMain.GameStatus.ONGOING) {
                     if (cell.getContentType() == MinefieldModel.ContentType.MINE) {
                         if (cell.getIconType() != MinefieldModel.IconType.MINE_EXPL) {
-                            imageToDraw = ICN_MINE.getImage();
+                            imageToDraw = mineIcon.getImage();
                         }
                     } else if (cell.getContentType() != MinefieldModel.ContentType.MINE 
                                 && cell.getIconType() == MinefieldModel.IconType.FLAG) {
-                        imageToDraw = ICN_FLAG_CROSSED.getImage();
+                        imageToDraw = flagIconCrosses.getImage();
                     } else if (cell.getIconType() == MinefieldModel.IconType.TILE_COVERED) {
                         imageToDraw = getIconForNumberCell(cell);
                     }
@@ -171,39 +173,39 @@ public class MinesweeperBoard extends JPanel {
     // If the cell was not a number (unlkely case), it return empty tile
     private Image getIconForNumberCell(MineFieldCell cell) {
         Image image = null;
-        switch (cell.getContentType()){
+        switch (cell.getContentType()) {
             case ONE:
-                image = ICN_ONE.getImage();
+                image = oneIcon.getImage();
                 break;
             case TWO:
-                image = ICN_TWO.getImage();
+                image = twoIcon.getImage();
                 break;
             case THREE:
-                image = ICN_THREE.getImage();
+                image = threeIcon.getImage();
                 break;
             case FOUR:
-                image = ICN_FOUR.getImage();
+                image = fourIcon.getImage();
                 break;
             case FIVE:
-                image = ICN_FIVE.getImage();
+                image = fiveIcon.getImage();
                 break;
             case SIX:
-                image = ICN_SIX.getImage();
+                image = sixIcon.getImage();
                 break;
             case SEVEN:
-                image = ICN_SEVEN.getImage();
+                image = sevenIcon.getImage();
                 break;
             case EIGHT:
-                image = ICN_EIGHT.getImage();
+                image = eightIcon.getImage();
                 break;
             default:
-                image = ICN_TILE_EMPTY.getImage();
+                image = emptyIconTitle.getImage();
                 break;
         }
         return image;
     }   
 
-    /*
+    /**
      * Together with the paintComponent(), this MouseAdapter is one of the most
      * important methods of the game. It handles the left mouse click and
      * right mouse click events on the mine cells. The clicked cell is 
@@ -270,7 +272,8 @@ public class MinesweeperBoard extends JPanel {
                         mainControl.gameLost("Hit mine");
                     }
                     if (cell.getContentType() == MinefieldModel.ContentType.ZERO) {
-                        mainControl.discoverConnectedEmptyCells((cRow * mainControl.numberOfColumns()) + cCol);
+                        mainControl.discoverConnectedEmptyCells(
+                            (cRow * mainControl.numberOfColumns()) + cCol);
                     }
                 }
             }

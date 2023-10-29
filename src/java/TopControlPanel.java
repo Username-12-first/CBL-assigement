@@ -29,13 +29,13 @@ public class TopControlPanel extends JPanel {
     JButton btnIntermediate;
     JButton btnExpert;
     
-    private ImageIcon ICN_SMILEY;
-    private ImageIcon ICN_SMILEY_COOL;
-    private ImageIcon ICN_SMILEY_SAD;
+    private ImageIcon smileyIcon;
+    private ImageIcon coolSmileyIcon;
+    private ImageIcon sadSmileyIcon;
 
-    private ImageIcon ICN_ONE;
-    private ImageIcon ICN_TWO;
-    private ImageIcon ICN_THREE;
+    private ImageIcon oneNumberIcon;
+    private ImageIcon twoNumberIcon;
+    private ImageIcon threeNumberIcon;
 
     /**
      * Constructor that takes in the main control object.
@@ -56,15 +56,15 @@ public class TopControlPanel extends JPanel {
     
     // The icons are seen on the buttons of the panel to control the game
     private void initIcons() {
-        String iconPath = mainControl.ICON_PATH;
-        String suffix = mainControl.ICON_SUFFIX;
-        ICN_SMILEY = new ImageIcon(iconPath + "smiley" + suffix, "Restart");
-        ICN_SMILEY_COOL = new ImageIcon(iconPath + "smiley-cool" + suffix, "You won!");
-        ICN_SMILEY_SAD = new ImageIcon(iconPath + "smiley-sad" + suffix, "Bad Luck!");
+        String iconPath = mainControl.iconPath();
+        String suffix = mainControl.iconFileExtension();
+        smileyIcon = new ImageIcon(iconPath + "smiley" + suffix, "Restart");
+        coolSmileyIcon = new ImageIcon(iconPath + "smiley-cool" + suffix, "You won!");
+        sadSmileyIcon = new ImageIcon(iconPath + "smiley-sad" + suffix, "Bad Luck!");
 
-        ICN_ONE = new ImageIcon(iconPath + "one" + suffix);
-        ICN_TWO = new ImageIcon(iconPath + "two" + suffix);
-        ICN_THREE = new ImageIcon(iconPath + "three" + suffix);
+        oneNumberIcon = new ImageIcon(iconPath + "one" + suffix);
+        twoNumberIcon = new ImageIcon(iconPath + "two" + suffix);
+        threeNumberIcon = new ImageIcon(iconPath + "three" + suffix);
     }
 
     /**
@@ -75,7 +75,7 @@ public class TopControlPanel extends JPanel {
         lblMineCounter.setText("Mines: " + mainControl.getMinesLeft());
         lblTimer = new JLabel("Time: ");
         lblTimer.setPreferredSize(new Dimension(50, 32));
-        btnRestart = new JButton(ICN_SMILEY);
+        btnRestart = new JButton(smileyIcon);
         btnRestart.setToolTipText("Restart Game");        
         //btnRestart.setSize(40,40);
         btnRestart.setPreferredSize(new Dimension(36, 36));
@@ -87,21 +87,21 @@ public class TopControlPanel extends JPanel {
             }
         });
     
-        JRadioButton rbtnBeginner = new JRadioButton("", ICN_ONE, true);
+        JRadioButton rbtnBeginner = new JRadioButton("", oneNumberIcon, true);
         rbtnBeginner.setToolTipText("Beginner");
         rbtnBeginner.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 mainControl.restartGame(MinesweeperMain.Difficulty.BEGINNER);
             }
         });
-        JRadioButton rbtnIntermediate = new JRadioButton("", ICN_TWO, true);
+        JRadioButton rbtnIntermediate = new JRadioButton("", twoNumberIcon, true);
         rbtnIntermediate.setToolTipText("Intermediate");
         rbtnIntermediate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 mainControl.restartGame(MinesweeperMain.Difficulty.INTERMEDIATE);
             }
         });
-        JRadioButton rbtnExpert = new JRadioButton("", ICN_THREE, true);
+        JRadioButton rbtnExpert = new JRadioButton("", threeNumberIcon, true);
         rbtnExpert.setToolTipText("Expert");
         rbtnExpert.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -151,20 +151,20 @@ public class TopControlPanel extends JPanel {
     // When the game is won, the controller calls this method to set the
     // smiley face on the reset button
     public void gameWon() {
-        btnRestart.setIcon(ICN_SMILEY_COOL);
+        btnRestart.setIcon(coolSmileyIcon);
     }
 
     // When the game is lost, the controller calls this method to set the
     // sad smiley face on the reset button
     public void gameLost() {
-        btnRestart.setIcon(ICN_SMILEY_SAD);
+        btnRestart.setIcon(sadSmileyIcon);
     }
 
     /**
      * Called by main control to setup the panel when the game is (re)started.
      */
     public void prepareStart() {
-        btnRestart.setIcon(ICN_SMILEY);
+        btnRestart.setIcon(smileyIcon);
         setMinesLeft(mainControl.getMinesLeft());
         setTime(0);         
     }

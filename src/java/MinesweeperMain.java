@@ -8,6 +8,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+
 /**
  * CBL Project - Minesweeper Game
  * 
@@ -61,14 +62,18 @@ public class MinesweeperMain {
      * enum for keeping the game status, which can be in ongoing, won or 
      * lost at any given time.
      */
-    public enum GameStatus {ONGOING, WON, LOST};
+    public enum GameStatus {
+        ONGOING, WON, LOST
+    }
 
     /**
      * enum for keeping the game difficulty level, which can be beginner
      * (9x9, 10 mines), intermediate (16x16, 40 mines) or expert (16x30,
      * 99 mines), as parametrized in the properties file.
      */
-    public enum Difficulty {BEGINNER, INTERMEDIATE, EXPERT};
+    public enum Difficulty {
+        BEGINNER, INTERMEDIATE, EXPERT
+    }
 
     // The main Model object for the minefield representation
     private MinefieldModel minefieldModel;   
@@ -93,12 +98,15 @@ public class MinesweeperMain {
     // in determining the end of the game.
     private int minesLeft;
 
+    /**
+     * Gives number of mines left. 
+     */
     public int getMinesLeft() {
         return minesLeft;
     }
 
     /**
-     * @todo
+     * Sets the number of mines still to find.
      */
     public void setMinesLeft(int minesLeft) {
         this.minesLeft = minesLeft;
@@ -119,8 +127,8 @@ public class MinesweeperMain {
     // The timer used to tick the timer counter every second
     private MinesweeperTimerTask timerTask;
     // The following configuration parameters are read/overrridden from the config.properties
-    public static final String ICON_PATH = "src/resources/icons/";
-    public static final String ICON_SUFFIX = ".png";
+    private static final String ICON_PATH = "src/resources/icons/";
+    private static final String ICON_FILE_EXTENSION = ".png";
     private Difficulty difficultyLevel = Difficulty.BEGINNER;
     private int numberOfMines = 10;
     private int numberOfRows = 9;
@@ -142,27 +150,48 @@ public class MinesweeperMain {
         Integer.MAX_VALUE, 
         Integer.MAX_VALUE 
     };
-    
-    // gives number of mines
+
+    /**
+     * Gives size of the cell in pixels.
+     */
+    public String iconPath() {
+        return ICON_PATH;
+    }
+
+    /**
+     * Gives size of the cell in pixels.
+     */
+    public String iconFileExtension() {
+        return ICON_FILE_EXTENSION;
+    }
+
+    /**
+     * Gives number of mines.
+     */
     public int numberOfMines() {
         return numberOfMines;
     }
 
-    // gives number of rows
+    /**
+     * Gives number of rows.
+     */
     public int numberOfRows() {
         return numberOfRows;
     }
-    
-    // gives number of columns
+
+    /**
+     * Gives number of columns.
+     */
     public int numberOfColumns() {
         return numberOfColumns;
     }
 
-    // gives size of the cell in pixels
+    /**
+     * Gives size of the cell in pixels.
+     */
     public int cellSizeInPixels() {
         return cellSizeInPixels;
     }
-    
 
     // gives timeout for the current level of difficulty
     private int getTimeoutInSeconds() {

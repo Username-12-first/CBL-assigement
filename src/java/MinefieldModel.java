@@ -179,6 +179,8 @@ public class MinefieldModel {
                     // The process should stop at numbered cells that neighbour mine cells.
                     // cell.setIconType(MinefieldModel.IconType.NUMBER);
                     break;
+                default:
+                    break;
             }
         }
     }
