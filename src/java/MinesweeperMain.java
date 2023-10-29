@@ -127,8 +127,8 @@ public class MinesweeperMain {
     // The timer used to tick the timer counter every second
     private MinesweeperTimerTask timerTask;
     // The following configuration parameters are read/overrridden from the config.properties
-    private static final String ICON_PATH = "src/resources/icons/";
-    private static final String ICON_FILE_EXTENSION = ".png";
+    private String iconPath = "src/resources/icons/";
+    private String iconFileExtension = ".png";
     private Difficulty difficultyLevel = Difficulty.BEGINNER;
     private int numberOfMines = 10;
     private int numberOfRows = 9;
@@ -138,12 +138,12 @@ public class MinesweeperMain {
     private int numberOfMinesBeginner = 10;
     private int numberOfRowsBeginner = 9;
     private int numberOfColumnsBeginner = 9;
-    private int numberOfMinesIntermediate = 10;
-    private int numberOfRowsIntermediate = 9;
-    private int numberOfColumnsIntermediate = 9;
-    private int numberOfMinesExpert = 10;
-    private int numberOfRowsExpert = 9;
-    private int numberOfColumnsExpert = 9;
+    private int numberOfMinesIntermediate = 40;
+    private int numberOfRowsIntermediate = 15;
+    private int numberOfColumnsIntermediate = 15;
+    private int numberOfMinesExpert = 99;
+    private int numberOfRowsExpert = 16;
+    private int numberOfColumnsExpert = 30;
     //There is a timeout per difficulty level. By default, effectively no limit
     private int[] timeoutPerLevel = new int[] {
         Integer.MAX_VALUE, 
@@ -155,14 +155,14 @@ public class MinesweeperMain {
      * Gives size of the cell in pixels.
      */
     public String iconPath() {
-        return ICON_PATH;
+        return iconPath;
     }
 
     /**
      * Gives size of the cell in pixels.
      */
     public String iconFileExtension() {
-        return ICON_FILE_EXTENSION;
+        return iconFileExtension;
     }
 
     /**
@@ -207,7 +207,9 @@ public class MinesweeperMain {
             Properties prop = new Properties();
             // Use the Properties objects to load the properties file
             prop.load(input);
-            // get the property values and print them out
+            // set the configuration variable values from .properties file
+            iconPath = prop.getProperty("icon.path");
+            iconFileExtension = prop.getProperty("icon.extension");        
             numberOfMinesBeginner = Integer.parseInt(prop.getProperty("mine.count.beginner"));
             numberOfRowsBeginner = 
                 Integer.parseInt(prop.getProperty("minefield.dim.rows.beginner"));
@@ -231,7 +233,7 @@ public class MinesweeperMain {
             timeoutPerLevel[2] = Integer.parseInt(prop.getProperty("timeout.seconds.expert"));
         } catch (IOException ex) {
             System.out.println(
-                "Error occuurred while reading config.properties file. Keeping default values.");
+                "Error occurred while reading config.properties file. Keeping default values.");
             ex.printStackTrace();
         }
     }

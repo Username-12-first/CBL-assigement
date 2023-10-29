@@ -16,12 +16,12 @@ import javax.swing.JPanel;
  * status panel at the bottom.
  */
 public class MinesweeperBoard extends JPanel {
-    private ImageIcon emptyIconTitle;
-    private ImageIcon covertIconTitle;
+    private ImageIcon emptyTileIcon;
+    private ImageIcon coveredTileIcon;
     private ImageIcon mineIcon;
-    private ImageIcon mineIconExplosion;
+    private ImageIcon mineExplodedIcon;
     private ImageIcon flagIcon;
-    private ImageIcon flagIconCrosses;
+    private ImageIcon flagCrossedIcon;
     private ImageIcon oneIcon;
     private ImageIcon twoIcon;
     private ImageIcon threeIcon;
@@ -56,12 +56,12 @@ public class MinesweeperBoard extends JPanel {
     private void initIcons() {
         String iconPath = mainControl.iconPath();
         String suffix = mainControl.iconFileExtension();
-        emptyIconTitle = new ImageIcon(iconPath + "tile-empty" + suffix);
-        covertIconTitle = new ImageIcon(iconPath + "tile-covered" + suffix);
+        emptyTileIcon = new ImageIcon(iconPath + "tile-empty" + suffix);
+        coveredTileIcon = new ImageIcon(iconPath + "tile-covered" + suffix);
         mineIcon = new ImageIcon(iconPath + "mine" + suffix);        
-        mineIconExplosion = new ImageIcon(iconPath + "mine-exploded" + suffix);
+        mineExplodedIcon = new ImageIcon(iconPath + "mine-exploded" + suffix);
         flagIcon = new ImageIcon(iconPath + "flag" + suffix);
-        flagIconCrosses = new ImageIcon(iconPath + "flag-crossed" + suffix);
+        flagCrossedIcon = new ImageIcon(iconPath + "flag-crossed" + suffix);
         oneIcon = new ImageIcon(iconPath + "one" + suffix);
         twoIcon = new ImageIcon(iconPath + "two" + suffix);
         threeIcon = new ImageIcon(iconPath + "three" + suffix);
@@ -116,26 +116,26 @@ public class MinesweeperBoard extends JPanel {
                 MineFieldCell cell = mainControl.getCell((i * mainControl.numberOfColumns()) + j);
                 switch (cell.getIconType()) {
                     case TILE_EMPTY:
-                        imageToDraw = emptyIconTitle.getImage();
+                        imageToDraw = emptyTileIcon.getImage();
                         break;
                     case NUMBER: 
                         imageToDraw = getIconForNumberCell(cell);            
                         break;
                     case TILE_COVERED:
                         cellsYetToDiscover++;
-                        imageToDraw = covertIconTitle.getImage();;
+                        imageToDraw = coveredTileIcon.getImage();;
                         break;
                     case MINE:
                         imageToDraw = mineIcon.getImage();
                         break;
                     case MINE_EXPL:
-                        imageToDraw = mineIconExplosion.getImage();;
+                        imageToDraw = mineExplodedIcon.getImage();;
                         break;                        
                     case FLAG:
                         imageToDraw = flagIcon.getImage();;
                         break;
                     case REVERT_FLAG:
-                        imageToDraw = covertIconTitle.getImage();
+                        imageToDraw = coveredTileIcon.getImage();
                         break;
                     default:
                         break;
@@ -149,7 +149,7 @@ public class MinesweeperBoard extends JPanel {
                         }
                     } else if (cell.getContentType() != MinefieldModel.ContentType.MINE 
                                 && cell.getIconType() == MinefieldModel.IconType.FLAG) {
-                        imageToDraw = flagIconCrosses.getImage();
+                        imageToDraw = flagCrossedIcon.getImage();
                     } else if (cell.getIconType() == MinefieldModel.IconType.TILE_COVERED) {
                         imageToDraw = getIconForNumberCell(cell);
                     }
@@ -199,7 +199,7 @@ public class MinesweeperBoard extends JPanel {
                 image = eightIcon.getImage();
                 break;
             default:
-                image = emptyIconTitle.getImage();
+                image = emptyTileIcon.getImage();
                 break;
         }
         return image;

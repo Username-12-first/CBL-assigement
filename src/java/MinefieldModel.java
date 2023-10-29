@@ -192,6 +192,8 @@ public class MinefieldModel {
      * SE,S,SW,W. 
      */
     public void discoverConnectedEmptyCells(int emptyCell) {
+        // Set icon type to empty for the current cell before starting others
+        field[emptyCell].setIconType(MinefieldModel.IconType.TILE_EMPTY);
         int currentCol = emptyCell % mainController.numberOfColumns();
         if (currentCol > 0) {
             updateIconAndContinueDiscovery(emptyCell - mainController.numberOfColumns() - 1);
@@ -205,7 +207,6 @@ public class MinefieldModel {
             updateIconAndContinueDiscovery(emptyCell + mainController.numberOfColumns() + 1);
             updateIconAndContinueDiscovery(emptyCell + 1);
         }
-
     }
 
     /**
