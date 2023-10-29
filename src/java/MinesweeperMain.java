@@ -139,8 +139,8 @@ public class MinesweeperMain {
     private int numberOfRowsBeginner = 9;
     private int numberOfColumnsBeginner = 9;
     private int numberOfMinesIntermediate = 40;
-    private int numberOfRowsIntermediate = 15;
-    private int numberOfColumnsIntermediate = 15;
+    private int numberOfRowsIntermediate = 16;
+    private int numberOfColumnsIntermediate = 16;
     private int numberOfMinesExpert = 99;
     private int numberOfRowsExpert = 16;
     private int numberOfColumnsExpert = 30;
