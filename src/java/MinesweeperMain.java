@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 /**
@@ -51,26 +50,27 @@ import javax.swing.JLabel;
  * @id 1992368
  */
 
- /*
-  * This is the main Controller class of the game. It manages the Views
-  * (minesweeperBoard and TopControlPanel) and the Models (MinefieldModel
-  * and MinefieldCell). Access and population of the game configuration 
-  * parameters from the config.properties file are also done in thie class.
-  */
+/**
+ * This is the main Controller class of the game. It manages the Views
+ * (minesweeperBoard and TopControlPanel) and the Models (MinefieldModel
+ * and MinefieldCell). Access and population of the game configuration 
+ * parameters from the config.properties file are also done in thie c.
+ */
 public class MinesweeperMain {
-    /*
+    /**
      * enum for keeping the game status, which can be in ongoing, won or 
      * lost at any given time.
      */
     public enum GameStatus {ONGOING, WON, LOST};
-    /*
+
+    /**
      * enum for keeping the game difficulty level, which can be beginner
      * (9x9, 10 mines), intermediate (16x16, 40 mines) or expert (16x30,
      * 99 mines), as parametrized in the properties file.
      */
     public enum Difficulty {BEGINNER, INTERMEDIATE, EXPERT};
 
-    // The main Model object for the minefield representation.
+    // The main Model object for the minefield representation
     private MinefieldModel minefieldModel;   
 
     public MinefieldModel getMinefieldModel() {
@@ -78,24 +78,31 @@ public class MinesweeperMain {
     }
 
     // Gme status instance variable
-    private GameStatus gameStatus;  
+    private GameStatus gameStatus;
+
     public GameStatus getGameStatus() {
         return gameStatus;
     }
+
     public void setGameStatus(GameStatus gameStatus) {
         this.gameStatus = gameStatus;
     }
   
     // Keeps track of how many mines are left. This value is communicated
     // with the model and view objects. It is one of the key instruments
-    // in determining the end of the game
+    // in determining the end of the game.
     private int minesLeft;
-    public int getMinesLeft(){
+
+    public int getMinesLeft() {
         return minesLeft;
     }
-    public void setMinesLeft(int minesLeft){
+
+    /**
+     * @todo
+     */
+    public void setMinesLeft(int minesLeft) {
         this.minesLeft = minesLeft;
-        if (pnlTopControl!=null){
+        if (pnlTopControl != null) {
             pnlTopControl.setMinesLeft(minesLeft);
         }
     }
@@ -107,13 +114,13 @@ public class MinesweeperMain {
     // The status bar at the bottom
     private JLabel lblStatusbar;
     // The control panel at the top. It conatins the mine count, restart 
-    // button (smiley icon), game difficulty level buttons and the timer
+    // button (smiley icon), game difficulty level buttons and the timer.
     private TopControlPanel pnlTopControl;
-    // The timer used to tick the timer counter every second.
+    // The timer used to tick the timer counter every second
     private MinesweeperTimerTask timerTask;
     // The following configuration parameters are read/overrridden from the config.properties
     public String ICON_PATH = "src/resources/icons/";
-    public String ICON_SUFFIX = ".png";     
+    public String ICON_SUFFIX = ".png";
     public Difficulty DIFFICULTY = Difficulty.BEGINNER;
     public int N_MINES = 10;
     public int N_ROWS = 9;
@@ -129,10 +136,11 @@ public class MinesweeperMain {
     private int N_MINES_EXP = 10;
     private int N_ROWS_EXP = 9;
     private int N_COLS_EXP = 9;
-     //There is a timeout per difficulty level. By default, effectively no limit
+    //There is a timeout per difficulty level. By default, effectively no limit
     private int[] TIMEOUT = new int[]{Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE };
+    
     // Reads key configuration prameters from the properties file
-    private void readProperties(){
+    private void readProperties() {
         //Read the game configuration parameters from the config.properties file
         String configPath =  "src/resources/config.properties";
         try (InputStream input = new FileInputStream(configPath)) {
@@ -165,8 +173,8 @@ public class MinesweeperMain {
 
     // Sets the number of mines, rows and columns parameters based on the given
     // difficulty level. All values are nitially read from the properties file
-    private void setParametersBasedOnDifficulty(Difficulty dif){
-        switch (dif){
+    private void setParametersBasedOnDifficulty(Difficulty dif) {
+        switch (dif) {
             case BEGINNER:
                 N_MINES = N_MINES_BEGIN;
                 N_ROWS = N_ROWS_BEGIN;
@@ -182,7 +190,9 @@ public class MinesweeperMain {
                 N_ROWS = N_ROWS_EXP;
                 N_COLS = N_COLS_EXP;
                 break;
-            }
+            default:
+                break;
+        }
     }
 
     // Initializes the minefield Model object
@@ -213,42 +223,48 @@ public class MinesweeperMain {
 
 
     // Returns the cell at the given index position in the minefield Model
-    public MineFieldCell getCell(int position){
+    public MineFieldCell getCell(int position) {
         return getMinefieldModel().getCell(position);
     }
 
     // Triggered by the View to initiate the discovery of the empty cells
     // in the Model, upon user click
-    public void discoverConnectedEmptyCells(int position){
+    public void discoverConnectedEmptyCells(int position) {
         getMinefieldModel().discoverConnectedEmptyCells(position);
     }
 
-    // Handles the chores for winning the game. Specifically, the displays
-    // in the top control panel and the minefield are updated accordingly
-    public void gameWon(){
+    /** 
+     * Handles the chores for winning the game. Specifically, the displays
+     *  in the top control panel and the minefield are updated accordingly.
+     */
+    public void gameWon() {
         gameStatus = GameStatus.WON;
         pnlTopControl.gameWon();
         redrawFrame();
     }
 
-    // Handles the chores for loss of the game. Specifically, the displays
-    // in the top control panel and the minefield are updated accordingly
-    public void gameLost(String reason){
+    /**
+     * Handles the chores for loss of the game. Specifically, the displays
+     * in the top control panel and the minefield are updated accordingly
+     */
+    public void gameLost(String reason) {
         gameStatus = GameStatus.LOST;
         pnlTopControl.gameLost();
-        pnlMineSweeperBoard.setStatus("Game Lost: " +reason);
+        pnlMineSweeperBoard.setStatus("Game Lost: " + reason);
         redrawFrame(); 
     }
 
     // Restarts the game with the existing difficulty. Triggred by clicking 
     // on the smiley icon on the top control panal.
-    public void restartGame(){
+    public void restartGame() {
         restartGame(DIFFICULTY);
     }
 
-    // Restarts the game with the selected difficulty. Triggred by clicking 
-    // on the difficu;ty level buttons in the top control panal.
-    public void restartGame(Difficulty level){
+    /**
+     * Restarts the game with the selected difficulty. Triggred by clicking 
+     * on the difficu;ty level buttons in the top control panal.
+     */
+    public void restartGame(Difficulty level) {
         DIFFICULTY = level;
         setParametersBasedOnDifficulty(level);
         initModel();
@@ -261,13 +277,13 @@ public class MinesweeperMain {
 
     // Forces a redraw of the top-level container. Used multiple times 
     // in response to changes of the game status and user actions/clicks
-    private void redrawFrame(){
+    private void redrawFrame() {
         frmMineSweeper.pack();
         frmMineSweeper.repaint(); 
     }
     
     // Launches the game for the first time. Used by the main method.
-    private void launchGame(){
+    private void launchGame() {
         readProperties();
         initModel();
         initGUI();
@@ -280,9 +296,9 @@ public class MinesweeperMain {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-              frmMineSweeper.setVisible(true);
+                frmMineSweeper.setVisible(true);
             }
-          });
+        });
 
     }
 
@@ -291,11 +307,11 @@ public class MinesweeperMain {
         new MinesweeperMain().launchGame();       
     }
 
-    /*
+    /**
      * Inner class that extend TimerTask. Used for time counting. 
      * Updates the timer label on the top control panel every second.
      */
-    public class MinesweeperTimerTask extends TimerTask{
+    public class MinesweeperTimerTask extends TimerTask {
         // Keeps track of the seconds passed since game (re)start
         private int seconds = 0;
 

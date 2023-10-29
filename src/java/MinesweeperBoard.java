@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-/*
+/**
  * The main View component of the mine sweeper game application. It maintains
  * the mine field. Although the model representation is a single array, the 
  * view is rendered as a two dimensional mine field. Each cell kind has its
@@ -38,8 +38,8 @@ public class MinesweeperBoard extends JPanel {
 
     private MinesweeperMain mainControl;
 
-    /*
-     * The constructor that takes in the main Control object and the status bat
+    /**
+     * The constructor that takes in the main Control object and the status bat.
      */
     public MinesweeperBoard(JLabel statusbar, MinesweeperMain mainControl) {
         this.lblStatus = statusbar;
@@ -50,10 +50,10 @@ public class MinesweeperBoard extends JPanel {
         initGUI();
     }
 
-    /*
-     * Creates the icons for the cells
+    /**
+     * Creates the icons for the cells.
      */
-    private void initIcons(){
+    private void initIcons() {
         String iconPath = mainControl.ICON_PATH;
         String suffix = mainControl.ICON_SUFFIX;
         ICN_TILE_EMPTY = new ImageIcon(iconPath + "tile-empty" + suffix);
@@ -72,37 +72,37 @@ public class MinesweeperBoard extends JPanel {
         ICN_EIGHT = new ImageIcon(iconPath + "eight" + suffix);
     }
     
-    /*
-     * Initializes the game board control variables
+    /**
+     * Initializes the game board control variables.
      */
     public void initBoard() { 
         minesLeft = mainControl.getMinesLeft();
         lblStatus.setText(Integer.toString(minesLeft));            
     }
 
-    /*
+    /**
      * Initializes the GUI of the minefield panel. The preferred size
      * is dynamically calculated from the row, column and cell size 
      * information taken from the Controller object
      */
-    public void initGUI(){
+    public void initGUI() {
         BOARD_WIDTH = mainControl.N_COLS * this.mainControl.CELL_SIZE_PIX + 1;
         BOARD_HEIGHT = mainControl.N_ROWS * this.mainControl.CELL_SIZE_PIX + 1;
         setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
     }
 
-    /*
+    /**
      * Restarts the game through board and GUI initializations. This method is 
      * called by the Controller object
      */
-    public void  restartGame(){
+    public void  restartGame() {
         initBoard();
         initGUI();
         repaint();
     }
 
     // @Override
-    /*
+    /**
      * The overriding paintComponent method performs one of the most 
      * critical tasks in the game. Traverses the cells one by one and renders
      * them on the the mine field GUI. If there are no more cells left to 
@@ -140,26 +140,27 @@ public class MinesweeperBoard extends JPanel {
 
                 }
                 //If the game is not ongoing (i.e., won or lost), we can reveal the underlying mines
-                if (mainControl.getGameStatus()!=MinesweeperMain.GameStatus.ONGOING){
-                    if (cell.getContentType()==MinefieldModel.ContentType.MINE){
-                        if (cell.getIconType()!=MinefieldModel.IconType.MINE_EXPL){
+                if (mainControl.getGameStatus() != MinesweeperMain.GameStatus.ONGOING) {
+                    if (cell.getContentType() == MinefieldModel.ContentType.MINE) {
+                        if (cell.getIconType() != MinefieldModel.IconType.MINE_EXPL) {
                             imageToDraw = ICN_MINE.getImage();
                         }
-                    }else if (cell.getContentType()!=MinefieldModel.ContentType.MINE && 
-                                cell.getIconType()==MinefieldModel.IconType.FLAG){
+                    } else if (cell.getContentType() != MinefieldModel.ContentType.MINE 
+                                && cell.getIconType() == MinefieldModel.IconType.FLAG) {
                         imageToDraw = ICN_FLAG_CROSSED.getImage();
-                    }else if (cell.getIconType()==MinefieldModel.IconType.TILE_COVERED){
-                            imageToDraw = getIconForNumberCell(cell);
+                    } else if (cell.getIconType() == MinefieldModel.IconType.TILE_COVERED) {
+                        imageToDraw = getIconForNumberCell(cell);
                     }
                 }
-                g.drawImage(imageToDraw, (j * mainControl.CELL_SIZE_PIX), (i * mainControl.CELL_SIZE_PIX), this);
+                g.drawImage(imageToDraw, (j * mainControl.CELL_SIZE_PIX), 
+                    (i * mainControl.CELL_SIZE_PIX), this);
             }
         }
         // If the game is on, but there are no more cells left to undiscover,
         // then inform the Controller that the game is won by the user. The 
         // status bar is further updated with the outcome of the game.
-        if (mainControl.getGameStatus()==MinesweeperMain.GameStatus.ONGOING){
-            if (cellsYetToDiscover == 0){
+        if (mainControl.getGameStatus() == MinesweeperMain.GameStatus.ONGOING) {
+            if (cellsYetToDiscover == 0) {
                 mainControl.gameWon();
                 lblStatus.setText("Game won");
             }
@@ -217,7 +218,8 @@ public class MinesweeperBoard extends JPanel {
             int cCol = x / mainControl.CELL_SIZE_PIX;
             int cRow = y / mainControl.CELL_SIZE_PIX;
 
-            if ((x < mainControl.N_COLS * mainControl.CELL_SIZE_PIX) && (y < mainControl.N_ROWS * mainControl.CELL_SIZE_PIX)) {
+            if ((x < mainControl.N_COLS * mainControl.CELL_SIZE_PIX) 
+                && (y < mainControl.N_ROWS * mainControl.CELL_SIZE_PIX)) {
                 MineFieldCell cell = mainControl.getCell((cRow * mainControl.N_COLS) + cCol);
                 if (e.getButton() == MouseEvent.BUTTON3 || e.getButton() == MouseEvent.BUTTON2) {
                     if (cell.getContentType() == MinefieldModel.ContentType.MINE) {
@@ -248,7 +250,7 @@ public class MinesweeperBoard extends JPanel {
                                 minesLeft--;
                                 lblStatus.setText(minesLeft + "");
                                 mainControl.setMinesLeft(minesLeft);
-                            } else {// Normally this case should not happen
+                            } else { // Normally this case should not happen
                                 lblStatus.setText("No mines left");
                             }
                         } else if (cell.getIconType() == MinefieldModel.IconType.FLAG) {

@@ -1,6 +1,6 @@
 import java.util.Random;
 
-/*
+/**
  * This class is the main Model of of the mine field. It consists of an array 
  * of MineFieldCells. The model initializes the minefield with mines (the
  * number provided by the Contoller) that are randomly distributed. When the 
@@ -8,14 +8,15 @@ import java.util.Random;
  * 
  */
 public class MinefieldModel {
-    /*
-     * Enum type for the (real) contents of a cell
+    /**
+     * Enum type for the (real) contents of a cell.
      */
     public enum ContentType {
         ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, MINE
     };
-    /*
-     * Enum type for the (display) icons of a cell
+
+    /**
+     * Enum type for the (display) icons of a cell.
      */
     public enum IconType {
         TILE_COVERED, TILE_EMPTY, NUMBER, MINE, MINE_EXPL, FLAG, REVERT_FLAG
@@ -29,9 +30,9 @@ public class MinefieldModel {
     // Reference to the Controller object
     private MinesweeperMain mainController;
 
-    /*
+    /**
      * Constructor that takes in the main Conroller object and initializes the
-     * random number generator
+     * random number generator.
      */
     public MinefieldModel(MinesweeperMain mainController) {
         this.mainController = mainController;
@@ -39,7 +40,7 @@ public class MinefieldModel {
         random = new Random();
     }
 
-    /*
+    /**
      * Utility method to check wether the given content type is a number.
      */
     public static boolean isContentTypeNumber(ContentType contentType) {
@@ -58,7 +59,7 @@ public class MinefieldModel {
         }
     }
 
-    /*
+    /**
      * Increments the mine threat count of the neighbour of a newly created mine
      * cell by one, provided that the neighbour itself is not a mine cell.
      */
@@ -102,7 +103,7 @@ public class MinefieldModel {
         }
     }
 
-    /*
+    /**
      * Initializes the mine field by randomly determining a new mine cell 
      * position and update its 8 neigbours' mine threat situation.
      */
@@ -120,15 +121,15 @@ public class MinefieldModel {
             if ((field[position].getContentType() != ContentType.MINE)) {
                 field[position].setContentType(ContentType.MINE);
                 field[position].setIconType(IconType.TILE_COVERED);
-                int current_col = position % mainController.N_COLS;
-                if (current_col > 0) {
+                int currentCol = position % mainController.N_COLS;
+                if (currentCol > 0) {
                     updateMineNeighbourThreatCount(position - 1 - mainController.N_COLS);
                     updateMineNeighbourThreatCount(position - 1);
                     updateMineNeighbourThreatCount(position + mainController.N_COLS - 1);
                 }
                 updateMineNeighbourThreatCount(position - mainController.N_COLS);
                 updateMineNeighbourThreatCount(position + mainController.N_COLS);
-                if (current_col < (mainController.N_COLS - 1)) {
+                if (currentCol < (mainController.N_COLS - 1)) {
                     updateMineNeighbourThreatCount(position - mainController.N_COLS + 1);
                     updateMineNeighbourThreatCount(position + mainController.N_COLS + 1);
                     updateMineNeighbourThreatCount(position + 1);
@@ -138,7 +139,7 @@ public class MinefieldModel {
         }
     }
 
-    /*
+    /**
      * Uncovers the visited cell with the 'empty cell icon' if its content is empty.
      * For numbered cells, updates the icon to open (numbered cell), but do not
      * continue further dicovering as the cell is at the boundary of the search.
@@ -182,22 +183,22 @@ public class MinefieldModel {
         }
     }
 
-    /*
+    /**
      * If an empty cell is clicked by the user, all empty and numbered cells
      * that are reacheable by the cell are recursively uncovered. Mine cells
      * are avoided. Each cell has 8 immediate neighbours; namely, NW,N,NE,E
      * SE,S,SW,W. 
      */
     public void discoverConnectedEmptyCells(int emptyCell) {
-        int current_col = emptyCell % mainController.N_COLS;
-        if (current_col > 0) {
+        int currentCol = emptyCell % mainController.N_COLS;
+        if (currentCol > 0) {
             updateIconAndContinueDiscovery(emptyCell - mainController.N_COLS - 1);
             updateIconAndContinueDiscovery(emptyCell - 1);
             updateIconAndContinueDiscovery(emptyCell + mainController.N_COLS - 1);
         }
         updateIconAndContinueDiscovery(emptyCell - mainController.N_COLS);
         updateIconAndContinueDiscovery(emptyCell + mainController.N_COLS);
-        if (current_col < (mainController.N_COLS - 1)) {
+        if (currentCol < (mainController.N_COLS - 1)) {
             updateIconAndContinueDiscovery(emptyCell - mainController.N_COLS + 1);
             updateIconAndContinueDiscovery(emptyCell + mainController.N_COLS + 1);
             updateIconAndContinueDiscovery(emptyCell + 1);
@@ -205,7 +206,7 @@ public class MinefieldModel {
 
     }
 
-    /*
+    /**
      * Returns the cell that is at the given position in the minefield array.
      */
     public MineFieldCell getCell(int position) {

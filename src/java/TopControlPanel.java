@@ -37,23 +37,25 @@ public class TopControlPanel extends JPanel {
     private ImageIcon ICN_TWO;
     private ImageIcon ICN_THREE;
 
-    // Constructor that takes in the main control object
-    public TopControlPanel(MinesweeperMain mainControl){
+    /**
+     * Constructor that takes in the main control object.
+     */
+    public TopControlPanel(MinesweeperMain mainControl) {
         this.mainControl = mainControl;
         initIcons();
         initialize();
     }
 
-    public void setTime(int seconds){
-        lblTimer.setText("Time: "+seconds);
+    public void setTime(int seconds) {
+        lblTimer.setText("Time: " + seconds);
     }
 
-    public void setMinesLeft(int minesLeft){
+    public void setMinesLeft(int minesLeft) {
         lblMineCounter.setText("Mines: " + minesLeft);        
     }   
     
     // The icons are seen on the buttons of the panel to control the game
-    private void initIcons(){
+    private void initIcons() {
         String iconPath = mainControl.ICON_PATH;
         String suffix = mainControl.ICON_SUFFIX;
         ICN_SMILEY = new ImageIcon(iconPath + "smiley" + suffix, "Restart");
@@ -65,42 +67,44 @@ public class TopControlPanel extends JPanel {
         ICN_THREE = new ImageIcon(iconPath + "three" + suffix);
     }
 
-    // Initializes the GUI elements, sets their layouts and adds listeners
-    public void initialize(){
+    /**
+     * Initializes the GUI elements, sets their layouts and adds listeners.
+     */
+    public void initialize() {
         lblMineCounter = new JLabel();
-        lblMineCounter.setText("Mines: "+mainControl.getMinesLeft());
+        lblMineCounter.setText("Mines: " + mainControl.getMinesLeft());
         lblTimer = new JLabel("Time: ");
-        lblTimer.setPreferredSize(new Dimension(50,32));
+        lblTimer.setPreferredSize(new Dimension(50, 32));
         btnRestart = new JButton(ICN_SMILEY);
         btnRestart.setToolTipText("Restart Game");        
         //btnRestart.setSize(40,40);
-        btnRestart.setPreferredSize(new Dimension(36,36));
-       // btnRestart.setMaximumSize(new Dimension(38,38));
+        btnRestart.setPreferredSize(new Dimension(36, 36));
+        //btnRestart.setMaximumSize(new Dimension(38,38));
         btnRestart.setOpaque(false);
-        btnRestart.addMouseListener(new java.awt.event.MouseAdapter(){
-            public void mousePressed(java.awt.event.MouseEvent evt){
+        btnRestart.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 mainControl.restartGame();
             }
         });
     
         JRadioButton rbtnBeginner = new JRadioButton("", ICN_ONE, true);
         rbtnBeginner.setToolTipText("Beginner");
-        rbtnBeginner.addMouseListener(new java.awt.event.MouseAdapter(){
-            public void mousePressed(java.awt.event.MouseEvent evt){
+        rbtnBeginner.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 mainControl.restartGame(MinesweeperMain.Difficulty.BEGINNER);
             }
         });
         JRadioButton rbtnIntermediate = new JRadioButton("", ICN_TWO, true);
         rbtnIntermediate.setToolTipText("Intermediate");
-        rbtnIntermediate.addMouseListener(new java.awt.event.MouseAdapter(){
-            public void mousePressed(java.awt.event.MouseEvent evt){
+        rbtnIntermediate.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 mainControl.restartGame(MinesweeperMain.Difficulty.INTERMEDIATE);
             }
         });
         JRadioButton rbtnExpert = new JRadioButton("", ICN_THREE, true);
         rbtnExpert.setToolTipText("Expert");
-        rbtnExpert.addMouseListener(new java.awt.event.MouseAdapter(){
-            public void mousePressed(java.awt.event.MouseEvent evt){
+        rbtnExpert.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
                 mainControl.restartGame(MinesweeperMain.Difficulty.EXPERT);
             }
         });
@@ -146,18 +150,20 @@ public class TopControlPanel extends JPanel {
 
     // When the game is won, the controller calls this method to set the
     // smiley face on the reset button
-    public void gameWon(){
+    public void gameWon() {
         btnRestart.setIcon(ICN_SMILEY_COOL);
     }
 
     // When the game is lost, the controller calls this method to set the
     // sad smiley face on the reset button
-    public void gameLost(){
+    public void gameLost() {
         btnRestart.setIcon(ICN_SMILEY_SAD);
     }
 
-    // Called by main control to setup the panel when the game is (re)started
-    public void prepareStart(){
+    /**
+     * Called by main control to setup the panel when the game is (re)started.
+     */
+    public void prepareStart() {
         btnRestart.setIcon(ICN_SMILEY);
         setMinesLeft(mainControl.getMinesLeft());
         setTime(0);         
