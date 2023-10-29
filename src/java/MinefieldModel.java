@@ -13,14 +13,14 @@ public class MinefieldModel {
      */
     public enum ContentType {
         ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, MINE
-    };
+    }
 
     /**
      * Enum type for the (display) icons of a cell.
      */
     public enum IconType {
         TILE_COVERED, TILE_EMPTY, NUMBER, MINE, MINE_EXPL, FLAG, REVERT_FLAG
-    };
+    }
 
     // The main data structure that models the minefield
     private MineFieldCell[] field;
@@ -108,7 +108,7 @@ public class MinefieldModel {
      * position and update its 8 neigbours' mine threat situation.
      */
     public void initializeMinefield() {
-        int numberOfCells = mainController.N_ROWS * mainController.N_COLS;
+        int numberOfCells = mainController.numberOfRows() * mainController.numberOfColumns();
         field = new MineFieldCell[numberOfCells];
         for (int i = 0; i < numberOfCells; i++) {
             field[i] = new MineFieldCell();
@@ -116,22 +116,22 @@ public class MinefieldModel {
         // Randomly determine a new mine cell position and update its 8 neigbours'
         // mine threat situation.
         int minesCreated = 0;
-        while (minesCreated < mainController.N_MINES) {
+        while (minesCreated < mainController.numberOfMines()) {
             int position = (int) ((numberOfCells - 1) * random.nextDouble());
             if ((field[position].getContentType() != ContentType.MINE)) {
                 field[position].setContentType(ContentType.MINE);
                 field[position].setIconType(IconType.TILE_COVERED);
-                int currentCol = position % mainController.N_COLS;
+                int currentCol = position % mainController.numberOfColumns();
                 if (currentCol > 0) {
-                    updateMineNeighbourThreatCount(position - 1 - mainController.N_COLS);
+                    updateMineNeighbourThreatCount(position - 1 - mainController.numberOfColumns());
                     updateMineNeighbourThreatCount(position - 1);
-                    updateMineNeighbourThreatCount(position + mainController.N_COLS - 1);
+                    updateMineNeighbourThreatCount(position + mainController.numberOfColumns() - 1);
                 }
-                updateMineNeighbourThreatCount(position - mainController.N_COLS);
-                updateMineNeighbourThreatCount(position + mainController.N_COLS);
-                if (currentCol < (mainController.N_COLS - 1)) {
-                    updateMineNeighbourThreatCount(position - mainController.N_COLS + 1);
-                    updateMineNeighbourThreatCount(position + mainController.N_COLS + 1);
+                updateMineNeighbourThreatCount(position - mainController.numberOfColumns());
+                updateMineNeighbourThreatCount(position + mainController.numberOfColumns());
+                if (currentCol < (mainController.numberOfColumns() - 1)) {
+                    updateMineNeighbourThreatCount(position - mainController.numberOfColumns() + 1);
+                    updateMineNeighbourThreatCount(position + mainController.numberOfColumns() + 1);
                     updateMineNeighbourThreatCount(position + 1);
                 }
                 minesCreated++;
@@ -190,17 +190,17 @@ public class MinefieldModel {
      * SE,S,SW,W. 
      */
     public void discoverConnectedEmptyCells(int emptyCell) {
-        int currentCol = emptyCell % mainController.N_COLS;
+        int currentCol = emptyCell % mainController.numberOfColumns();
         if (currentCol > 0) {
-            updateIconAndContinueDiscovery(emptyCell - mainController.N_COLS - 1);
+            updateIconAndContinueDiscovery(emptyCell - mainController.numberOfColumns() - 1);
             updateIconAndContinueDiscovery(emptyCell - 1);
-            updateIconAndContinueDiscovery(emptyCell + mainController.N_COLS - 1);
+            updateIconAndContinueDiscovery(emptyCell + mainController.numberOfColumns() - 1);
         }
-        updateIconAndContinueDiscovery(emptyCell - mainController.N_COLS);
-        updateIconAndContinueDiscovery(emptyCell + mainController.N_COLS);
-        if (currentCol < (mainController.N_COLS - 1)) {
-            updateIconAndContinueDiscovery(emptyCell - mainController.N_COLS + 1);
-            updateIconAndContinueDiscovery(emptyCell + mainController.N_COLS + 1);
+        updateIconAndContinueDiscovery(emptyCell - mainController.numberOfColumns());
+        updateIconAndContinueDiscovery(emptyCell + mainController.numberOfColumns());
+        if (currentCol < (mainController.numberOfColumns() - 1)) {
+            updateIconAndContinueDiscovery(emptyCell - mainController.numberOfColumns() + 1);
+            updateIconAndContinueDiscovery(emptyCell + mainController.numberOfColumns() + 1);
             updateIconAndContinueDiscovery(emptyCell + 1);
         }
 

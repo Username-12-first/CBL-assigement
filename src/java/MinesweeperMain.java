@@ -119,26 +119,56 @@ public class MinesweeperMain {
     // The timer used to tick the timer counter every second
     private MinesweeperTimerTask timerTask;
     // The following configuration parameters are read/overrridden from the config.properties
-    public String ICON_PATH = "src/resources/icons/";
-    public String ICON_SUFFIX = ".png";
-    public Difficulty DIFFICULTY = Difficulty.BEGINNER;
-    public int N_MINES = 10;
-    public int N_ROWS = 9;
-    public int N_COLS = 9;
-    public int CELL_SIZE_PIX = 32;
+    public static final String ICON_PATH = "src/resources/icons/";
+    public static final String ICON_SUFFIX = ".png";
+    private Difficulty difficultyLevel = Difficulty.BEGINNER;
+    private int numberOfMines = 10;
+    private int numberOfRows = 9;
+    private int numberOfColumns = 9;
+    private int cellSizeInPixels = 32;
 
-    private int N_MINES_BEGIN = 10;
-    private int N_ROWS_BEGIN = 9;
-    private int N_COLS_BEGIN = 9;
-    private int N_MINES_INT = 10;
-    private int N_ROWS_INT = 9;
-    private int N_COLS_INT = 9;
-    private int N_MINES_EXP = 10;
-    private int N_ROWS_EXP = 9;
-    private int N_COLS_EXP = 9;
+    private int numberOfMinesBeginner = 10;
+    private int numberOfRowsBeginner = 9;
+    private int numberOfColumnsBeginner = 9;
+    private int numberOfMinesIntermediate = 10;
+    private int numberOfRowsIntermediate = 9;
+    private int numberOfColumnsIntermediate = 9;
+    private int numberOfMinesExpert = 10;
+    private int numberOfRowsExpert = 9;
+    private int numberOfColumnsExpert = 9;
     //There is a timeout per difficulty level. By default, effectively no limit
-    private int[] TIMEOUT = new int[]{Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE };
+    private int[] timeoutPerLevel = new int[] {
+        Integer.MAX_VALUE, 
+        Integer.MAX_VALUE, 
+        Integer.MAX_VALUE 
+    };
     
+    // gives number of mines
+    public int numberOfMines() {
+        return numberOfMines;
+    }
+
+    // gives number of rows
+    public int numberOfRows() {
+        return numberOfRows;
+    }
+    
+    // gives number of columns
+    public int numberOfColumns() {
+        return numberOfColumns;
+    }
+
+    // gives size of the cell in pixels
+    public int cellSizeInPixels() {
+        return cellSizeInPixels;
+    }
+    
+
+    // gives timeout for the current level of difficulty
+    private int getTimeoutInSeconds() {
+        return timeoutPerLevel[difficultyLevel.ordinal()];
+    }
+
     // Reads key configuration prameters from the properties file
     private void readProperties() {
         //Read the game configuration parameters from the config.properties file
@@ -149,24 +179,30 @@ public class MinesweeperMain {
             // Use the Properties objects to load the properties file
             prop.load(input);
             // get the property values and print them out
-            N_MINES_BEGIN = Integer.parseInt(prop.getProperty("mine.count.beginner"));
-            N_ROWS_BEGIN = Integer.parseInt(prop.getProperty("minefield.dim.rows.beginner"));
-            N_COLS_BEGIN = Integer.parseInt(prop.getProperty("minefield.dim.cols.beginner"));
-            N_MINES_INT = Integer.parseInt(prop.getProperty("mine.count.intermediate"));
-            N_ROWS_INT = Integer.parseInt(prop.getProperty("minefield.dim.rows.intermediate"));
-            N_COLS_INT = Integer.parseInt(prop.getProperty("minefield.dim.cols.intermediate"));
-            N_MINES_EXP = Integer.parseInt(prop.getProperty("mine.count.expert"));
-            N_ROWS_EXP = Integer.parseInt(prop.getProperty("minefield.dim.rows.expert"));
-            N_COLS_EXP = Integer.parseInt(prop.getProperty("minefield.dim.cols.expert"));
+            numberOfMinesBeginner = Integer.parseInt(prop.getProperty("mine.count.beginner"));
+            numberOfRowsBeginner = 
+                Integer.parseInt(prop.getProperty("minefield.dim.rows.beginner"));
+            numberOfColumnsBeginner = 
+                Integer.parseInt(prop.getProperty("minefield.dim.cols.beginner"));
+            numberOfMinesIntermediate = 
+                Integer.parseInt(prop.getProperty("mine.count.intermediate"));
+            numberOfRowsIntermediate = 
+                Integer.parseInt(prop.getProperty("minefield.dim.rows.intermediate"));
+            numberOfColumnsIntermediate = 
+                Integer.parseInt(prop.getProperty("minefield.dim.cols.intermediate"));
+            numberOfMinesExpert = Integer.parseInt(prop.getProperty("mine.count.expert"));
+            numberOfRowsExpert = Integer.parseInt(prop.getProperty("minefield.dim.rows.expert"));
+            numberOfColumnsExpert = Integer.parseInt(prop.getProperty("minefield.dim.cols.expert"));
             int difficulty =  Integer.parseInt(prop.getProperty("difficulty.level"));
-            DIFFICULTY = Difficulty.values()[difficulty];
-            setParametersBasedOnDifficulty(DIFFICULTY);
-            CELL_SIZE_PIX = Integer.parseInt(prop.getProperty("cell.size.pixels"));
-            TIMEOUT[0] = Integer.parseInt(prop.getProperty("timeout.seconds.beginner"));
-            TIMEOUT[1] = Integer.parseInt(prop.getProperty("timeout.seconds.intermediate"));
-            TIMEOUT[2] = Integer.parseInt(prop.getProperty("timeout.seconds.expert"));
+            difficultyLevel = Difficulty.values()[difficulty];
+            setParametersBasedOnDifficulty(difficultyLevel);
+            cellSizeInPixels = Integer.parseInt(prop.getProperty("cell.size.pixels"));
+            timeoutPerLevel[0] = Integer.parseInt(prop.getProperty("timeout.seconds.beginner"));
+            timeoutPerLevel[1] = Integer.parseInt(prop.getProperty("timeout.seconds.intermediate"));
+            timeoutPerLevel[2] = Integer.parseInt(prop.getProperty("timeout.seconds.expert"));
         } catch (IOException ex) {
-            System.out.println("Error occuurred while reading config.properties file. Keeping default values.");
+            System.out.println(
+                "Error occuurred while reading config.properties file. Keeping default values.");
             ex.printStackTrace();
         }
     }
@@ -176,19 +212,19 @@ public class MinesweeperMain {
     private void setParametersBasedOnDifficulty(Difficulty dif) {
         switch (dif) {
             case BEGINNER:
-                N_MINES = N_MINES_BEGIN;
-                N_ROWS = N_ROWS_BEGIN;
-                N_COLS = N_COLS_BEGIN;
+                numberOfMines = numberOfMinesBeginner;
+                numberOfRows = numberOfRowsBeginner;
+                numberOfColumns = numberOfColumnsBeginner;
                 break;
             case INTERMEDIATE:
-                N_MINES = N_MINES_INT;
-                N_ROWS = N_ROWS_INT;
-                N_COLS = N_COLS_INT;
+                numberOfMines = numberOfMinesIntermediate;
+                numberOfRows = numberOfRowsIntermediate;
+                numberOfColumns = numberOfColumnsIntermediate;
                 break;
             case EXPERT:
-                N_MINES = N_MINES_EXP;
-                N_ROWS = N_ROWS_EXP;
-                N_COLS = N_COLS_EXP;
+                numberOfMines = numberOfMinesExpert;
+                numberOfRows = numberOfRowsExpert;
+                numberOfColumns = numberOfColumnsExpert;
                 break;
             default:
                 break;
@@ -197,7 +233,7 @@ public class MinesweeperMain {
 
     // Initializes the minefield Model object
     private void initModel() {
-        setMinesLeft(N_MINES);
+        setMinesLeft(numberOfMines);
         minefieldModel = new MinefieldModel(this);
         minefieldModel.initializeMinefield();
     }
@@ -257,7 +293,7 @@ public class MinesweeperMain {
     // Restarts the game with the existing difficulty. Triggred by clicking 
     // on the smiley icon on the top control panal.
     public void restartGame() {
-        restartGame(DIFFICULTY);
+        restartGame(difficultyLevel);
     }
 
     /**
@@ -265,7 +301,7 @@ public class MinesweeperMain {
      * on the difficu;ty level buttons in the top control panal.
      */
     public void restartGame(Difficulty level) {
-        DIFFICULTY = level;
+        difficultyLevel = level;
         setParametersBasedOnDifficulty(level);
         initModel();
         gameStatus = GameStatus.ONGOING;
@@ -318,7 +354,7 @@ public class MinesweeperMain {
         public void run() {
             if (gameStatus == GameStatus.ONGOING) {
                 pnlTopControl.setTime(seconds++);
-                if (seconds > TIMEOUT[DIFFICULTY.ordinal()]) {
+                if (seconds > getTimeoutInSeconds()) {
                     gameLost("Timeout");
                 }
             }

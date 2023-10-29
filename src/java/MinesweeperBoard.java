@@ -86,8 +86,8 @@ public class MinesweeperBoard extends JPanel {
      * information taken from the Controller object
      */
     public void initGUI() {
-        BOARD_WIDTH = mainControl.N_COLS * this.mainControl.CELL_SIZE_PIX + 1;
-        BOARD_HEIGHT = mainControl.N_ROWS * this.mainControl.CELL_SIZE_PIX + 1;
+        BOARD_WIDTH = mainControl.numberOfColumns() * this.mainControl.cellSizeInPixels() + 1;
+        BOARD_HEIGHT = mainControl.numberOfRows() * this.mainControl.cellSizeInPixels() + 1;
         setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
     }
 
@@ -111,9 +111,9 @@ public class MinesweeperBoard extends JPanel {
     public void paintComponent(Graphics g) {
         int cellsYetToDiscover = 0;
         Image imageToDraw = null;
-        for (int i = 0; i < mainControl.N_ROWS; i++) {
-            for (int j = 0; j < mainControl.N_COLS; j++) {
-                MineFieldCell cell = mainControl.getCell((i * mainControl.N_COLS) + j);
+        for (int i = 0; i < mainControl.numberOfRows(); i++) {
+            for (int j = 0; j < mainControl.numberOfColumns(); j++) {
+                MineFieldCell cell = mainControl.getCell((i * mainControl.numberOfColumns()) + j);
                 switch (cell.getIconType()) {
                     case TILE_EMPTY:
                         imageToDraw = ICN_TILE_EMPTY.getImage();
@@ -152,8 +152,8 @@ public class MinesweeperBoard extends JPanel {
                         imageToDraw = getIconForNumberCell(cell);
                     }
                 }
-                g.drawImage(imageToDraw, (j * mainControl.CELL_SIZE_PIX), 
-                    (i * mainControl.CELL_SIZE_PIX), this);
+                g.drawImage(imageToDraw, (j * mainControl.cellSizeInPixels()), 
+                    (i * mainControl.cellSizeInPixels()), this);
             }
         }
         // If the game is on, but there are no more cells left to undiscover,
@@ -215,12 +215,13 @@ public class MinesweeperBoard extends JPanel {
             int x = e.getX();
             int y = e.getY();
 
-            int cCol = x / mainControl.CELL_SIZE_PIX;
-            int cRow = y / mainControl.CELL_SIZE_PIX;
+            int cCol = x / mainControl.cellSizeInPixels();
+            int cRow = y / mainControl.cellSizeInPixels();
 
-            if ((x < mainControl.N_COLS * mainControl.CELL_SIZE_PIX) 
-                && (y < mainControl.N_ROWS * mainControl.CELL_SIZE_PIX)) {
-                MineFieldCell cell = mainControl.getCell((cRow * mainControl.N_COLS) + cCol);
+            if ((x < mainControl.numberOfColumns() * mainControl.cellSizeInPixels()) 
+                && (y < mainControl.numberOfRows() * mainControl.cellSizeInPixels())) {
+                MineFieldCell cell = 
+                    mainControl.getCell((cRow * mainControl.numberOfColumns()) + cCol);
                 if (e.getButton() == MouseEvent.BUTTON3 || e.getButton() == MouseEvent.BUTTON2) {
                     if (cell.getContentType() == MinefieldModel.ContentType.MINE) {
                         if (cell.getIconType() == MinefieldModel.IconType.TILE_COVERED) {
@@ -269,7 +270,7 @@ public class MinesweeperBoard extends JPanel {
                         mainControl.gameLost("Hit mine");
                     }
                     if (cell.getContentType() == MinefieldModel.ContentType.ZERO) {
-                        mainControl.discoverConnectedEmptyCells((cRow * mainControl.N_COLS) + cCol);
+                        mainControl.discoverConnectedEmptyCells((cRow * mainControl.numberOfColumns()) + cCol);
                     }
                 }
             }
